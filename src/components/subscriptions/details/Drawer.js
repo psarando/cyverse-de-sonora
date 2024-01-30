@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import {
@@ -16,8 +17,6 @@ import {
     useTheme,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { VerifiedUser } from "@mui/icons-material";
 import EmptyTable from "components/table/EmptyTable";
 import { formatDateObject } from "components/utils/DateFormatter";
@@ -32,20 +31,21 @@ import constants from "../../../../src/constants";
 import navigationConstants from "../../../common/NavigationConstants";
 import { formatFileSize } from "components/data/utils";
 
-const TABS = {
-    subscriptionDetails: "details",
-    addonsDetails: "addonsDetails",
+const PREFIX = 'SubscriptionDrawer';
+
+const classes = {
+    drawerPaper: `${PREFIX}-drawerPaper`,
+    drawerHeader: `${PREFIX}-drawerHeader`,
+    drawerSubheader: `${PREFIX}-drawerSubheader`
 };
 
-const ADDONS_TABLE_COLUMNS = [
-    { name: "Add-on", numeric: false, enableSorting: false },
-    { name: "Amount", numeric: false, enableSorting: false },
-    { name: "Resource Type", numeric: false, enableSorting: false },
-    { name: "Paid", numeric: false, enableSorting: false },
-];
-
-const useStyles = makeStyles((theme) => ({
-    drawerPaper: {
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.drawerPaper}`]: {
         [theme.breakpoints.up("xl")]: {
             maxWidth: "25%",
         },
@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
             maxWidth: "90%",
         },
     },
-    drawerHeader: {
+
+    [`& .${classes.drawerHeader}`]: {
         margin: theme.spacing(1),
         height: "2em",
         display: "flex",
@@ -65,13 +66,26 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: "100%",
         alignItems: "center",
     },
-    drawerSubheader: {
+
+    [`& .${classes.drawerSubheader}`]: {
         margin: theme.spacing(2),
         display: "flex",
         flexDirection: "row",
         maxWidth: "100%",
-    },
+    }
 }));
+
+const TABS = {
+    subscriptionDetails: "details",
+    addonsDetails: "addonsDetails",
+};
+
+const ADDONS_TABLE_COLUMNS = [
+    { name: "Add-on", numeric: false, enableSorting: false },
+    { name: "Amount", numeric: false, enableSorting: false },
+    { name: "Resource Type", numeric: false, enableSorting: false },
+    { name: "Paid", numeric: false, enableSorting: false },
+];
 
 function AddonsDetails(props) {
     const { addons, parentId, t } = props;
@@ -181,7 +195,7 @@ function DetailsPanel(props) {
 function QuotasDetails(props) {
     const { selectedSubscription } = props;
     return (
-        <>
+        (<Root>
             {selectedSubscription &&
                 selectedSubscription.quotas.length > 0 &&
                 selectedSubscription.quotas.map((item, index) => {
@@ -196,7 +210,7 @@ function QuotasDetails(props) {
                         </Typography>
                     );
                 })}
-        </>
+        </Root>)
     );
 }
 
@@ -212,7 +226,7 @@ function SubscriptionDrawer(props) {
         selectedSubscriptionAddons,
         selectedUserPortalId,
     } = props;
-    const classes = useStyles();
+
     const drawerId = buildID(baseId, ids.DETAILS_DRAWER);
     const subscriptionDetailsTabId = buildID(
         drawerId,
@@ -291,7 +305,7 @@ function SubscriptionDrawer(props) {
 
 function SubscriptionHeader(props) {
     const { portalId, username } = props;
-    const classes = useStyles();
+
     const baseURL = constants.DEFAULT_USER_PORTAL_URL;
     const subURL = navigationConstants.ADMIN_USER_PORTAL_USERS;
     const linkToUserPortal = `${baseURL}${subURL}/${portalId}`;
@@ -319,7 +333,7 @@ function SubscriptionHeader(props) {
 
 function SubscriptionSubheader() {
     const { t } = useTranslation("subscriptions");
-    const classes = useStyles();
+
 
     return (
         <div className={classes.drawerSubheader}>

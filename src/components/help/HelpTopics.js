@@ -5,6 +5,7 @@
  *
  */
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -26,11 +27,24 @@ import {
 } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
-import makeStyles from "@mui/styles/makeStyles";
 import { useConfig } from "contexts/config";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'HelpTopics';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    body: `${PREFIX}-body`,
+    action: `${PREFIX}-action`,
+    title: `${PREFIX}-title`,
+    topics: `${PREFIX}-topics`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
         width: 350,
         [theme.breakpoints.down("sm")]: {
             marginLeft: theme.spacing(1),
@@ -38,24 +52,28 @@ const useStyles = makeStyles((theme) => ({
             height: 210,
         },
     },
-    body: {
+
+    [`& .${classes.body}`]: {
         marginTop: theme.spacing(0.1),
     },
-    action: {
+
+    [`& .${classes.action}`]: {
         marginLeft: "auto",
     },
-    title: {
+
+    [`& .${classes.title}`]: {
         backgroundColor: theme.palette.info.main,
         color: theme.palette.info.contrastText,
     },
-    topics: {
+
+    [`& .${classes.topics}`]: {
         margin: theme.spacing(1),
-    },
+    }
 }));
 
 function TopicCard(props) {
     const { title, description, action } = props;
-    const classes = useStyles();
+
     return (
         <Card className={classes.root} variant="outlined">
             <CardHeader
@@ -80,7 +98,7 @@ export default function HelpTopics(props) {
     const { baseId } = props;
     const [runTour, setRunTour] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState();
-    const classes = useStyles();
+
     const { t } = useTranslation("help");
     const [config] = useConfig();
 
@@ -88,7 +106,7 @@ export default function HelpTopics(props) {
     const de_faq = config?.deFaq;
 
     return (
-        <div style={{ overflow: "auto" }}>
+        <Root style={{ overflow: "auto" }}>
             <Typography variant="h6" color="primary" className={classes.topics}>
                 {t("support")}
             </Typography>
@@ -257,6 +275,6 @@ export default function HelpTopics(props) {
                 onTourExit={() => setRunTour(false)}
                 runTour={runTour}
             />
-        </div>
+        </Root>
     );
 }

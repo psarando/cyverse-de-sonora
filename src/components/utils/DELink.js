@@ -13,23 +13,34 @@
  */
 
 import React from "react";
+import { styled } from '@mui/material/styles';
 import Highlighter from "components/highlighter/Highlighter";
 import { Link } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-const useStyles = makeStyles((theme) => ({
-    link: {
+const PREFIX = 'DELink';
+
+const classes = {
+    link: `${PREFIX}-link`
+};
+
+const StyledLink = styled(Link)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.link}`]: {
         cursor: "pointer",
         "&:hover": {
             textDecoration: "underline",
             color: theme.palette.primary.main,
         },
-    },
+    }
 }));
+
 const DELink = React.forwardRef((props, ref) => {
     const { id, text, title, searchTerm, onClick, href } = props;
-    const classes = useStyles();
+
     return (
-        <Link
+        <StyledLink
             id={id}
             title={title}
             href={href}
@@ -44,7 +55,7 @@ const DELink = React.forwardRef((props, ref) => {
             underline="hover"
         >
             <Highlighter search={searchTerm || ""}>{text}</Highlighter>
-        </Link>
+        </StyledLink>
     );
 });
 

@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "../ids";
@@ -33,19 +34,34 @@ import {
     Toolbar,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { Info } from "@mui/icons-material";
 import Autocomplete from "@mui/material/Autocomplete";
 
-const useStyles = makeStyles((theme) => ({
-    menuButton: {
+const PREFIX = 'Toolbar';
+
+const classes = {
+    menuButton: `${PREFIX}-menuButton`,
+    divider: `${PREFIX}-divider`,
+    filter: `${PREFIX}-filter`,
+    filterIcon: `${PREFIX}-filterIcon`,
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.menuButton}`]: {
         color: theme.palette.info.contrastText,
     },
-    divider: {
+
+    [`& .${classes.divider}`]: {
         flexGrow: 1,
     },
-    filter: {
+
+    [`& .${classes.filter}`]: {
         [theme.breakpoints.down("sm")]: {
             width: 175,
             margin: theme.spacing(0.2),
@@ -55,24 +71,26 @@ const useStyles = makeStyles((theme) => ({
             margin: theme.spacing(1),
         },
     },
-    filterIcon: {
+
+    [`& .${classes.filterIcon}`]: {
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0.2),
             paddingLeft: 0,
         },
     },
-    toolbarItems: {
+
+    [`& .${classes.toolbarItems}`]: {
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0.5),
         },
         [theme.breakpoints.up("sm")]: {
             margin: theme.spacing(1),
         },
-    },
+    }
 }));
 
 function PermissionsFilter(props) {
-    const { baseId, filter, handleFilterChange, classes } = props;
+    const { baseId, filter, handleFilterChange, } = props;
     const { t } = useTranslation("tools");
     return (
         <Autocomplete
@@ -135,7 +153,7 @@ export default function ToolsToolbar(props) {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [requestDialogOpen, setRequestDialogOpen] = useState(false);
-    const classes = useStyles();
+
     const { t } = useTranslation("tools");
     const { t: i18nCommon } = useTranslation("common");
 
@@ -149,7 +167,7 @@ export default function ToolsToolbar(props) {
     const { isSmDown, isMdDown } = useBreakpoints();
 
     return (
-        <>
+        (<Root>
             <Toolbar variant="dense">
                 {!isSmDown && (
                     <>
@@ -228,7 +246,6 @@ export default function ToolsToolbar(props) {
                     tool={hasSelection ? getSelectedTools()[0] : null}
                 />
             )}
-
             <EditToolDialog
                 open={addDialogOpen}
                 onClose={() => setAddDialogOpen(false)}
@@ -263,6 +280,6 @@ export default function ToolsToolbar(props) {
                 open={requestDialogOpen}
                 onClose={() => setRequestDialogOpen(false)}
             />
-        </>
+        </Root>)
     );
 }

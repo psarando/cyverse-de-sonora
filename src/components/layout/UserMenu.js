@@ -6,6 +6,7 @@
  *
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -25,10 +26,21 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+const PREFIX = 'UserMenu';
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
+const classes = {
+    paper: `${PREFIX}-paper`,
+    typography: `${PREFIX}-typography`,
+    divider: `${PREFIX}-divider`,
+    button: `${PREFIX}-button`
+};
+
+const StyledPaper = styled(Paper)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.paper}`]: {
         padding: theme.spacing(1),
         [theme.breakpoints.down("sm")]: {
             padding: theme.spacing(0.2),
@@ -36,27 +48,28 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 
-    typography: {
+    [`& .${classes.typography}`]: {
         color: theme.palette.main_sidebar,
         [theme.breakpoints.down("sm")]: {
             color: theme.palette.info.contrastText,
         },
     },
 
-    divider: {
+    [`& .${classes.divider}`]: {
         margin: theme.spacing(1),
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0.5),
         },
     },
 
-    button: {
+    [`& .${classes.button}`]: {
         color: theme.palette.primary.main,
         [theme.breakpoints.down("sm")]: {
             color: theme.palette.info.contrastText,
         },
-    },
+    }
 }));
+
 export default function UserMenu(props) {
     const {
         profile: {
@@ -70,7 +83,7 @@ export default function UserMenu(props) {
     } = props;
     const { t } = useTranslation(["common"]);
     const theme = useTheme();
-    const classes = useStyles();
+
 
     const formattedEndDate = formatDateObject(
         new Date(subscription?.effective_end_date),
@@ -83,7 +96,7 @@ export default function UserMenu(props) {
     });
 
     return (
-        <Paper className={classes.paper}>
+        <StyledPaper className={classes.paper}>
             <Grid
                 container
                 direction="column"
@@ -208,6 +221,6 @@ export default function UserMenu(props) {
                     </ExternalLink>
                 </Grid>
             </Grid>
-        </Paper>
+        </StyledPaper>
     );
 }

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import {
     Card,
     CardContent,
@@ -9,8 +11,6 @@ import {
     Button,
     FormControl,
 } from "@mui/material";
-
-import makeStyles from "@mui/styles/makeStyles";
 
 import { useMutation } from "react-query";
 import { useTranslation } from "i18n";
@@ -25,8 +25,21 @@ import {
 
 import withErrorAnnouncer from "../../../error/withErrorAnnouncer";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'index';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    container: `${PREFIX}-container`,
+    button: `${PREFIX}-button`,
+    textField: `${PREFIX}-textField`
+};
+
+const StyledCard = styled(Card)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
         marginBottom: theme.spacing(4),
         width: "100%",
         [theme.breakpoints.down("sm")]: {
@@ -34,13 +47,15 @@ const useStyles = makeStyles((theme) => ({
             justifyContent: "center",
         },
     },
-    container: {
+
+    [`& .${classes.container}`]: {
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
         marginBottom: theme.spacing(2),
     },
-    button: {
+
+    [`& .${classes.button}`]: {
         marginLeft: theme.spacing(1),
         marginTop: theme.spacing(1),
         [theme.breakpoints.down("sm")]: {
@@ -48,7 +63,8 @@ const useStyles = makeStyles((theme) => ({
             marginLeft: 0,
         },
     },
-    textField: {
+
+    [`& .${classes.textField}`]: {
         [theme.breakpoints.up("xs")]: {
             width: "100%",
             marginLeft: 0,
@@ -61,11 +77,11 @@ const useStyles = makeStyles((theme) => ({
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
         },
-    },
+    }
 }));
 
 const JobLimits = ({ showErrorAnnouncer }) => {
-    const classes = useStyles();
+
     const { t } = useTranslation("vice-admin");
     const [username, setUsername] = useState("");
     const [previousUsername, setPreviousUsername] = useState("");
@@ -114,7 +130,7 @@ const JobLimits = ({ showErrorAnnouncer }) => {
     }
 
     return (
-        <Card id={id(ids.CARD)} className={classes.root}>
+        <StyledCard id={id(ids.CARD)} className={classes.root}>
             <CardHeader
                 title={t("jobLimits")}
                 titleTypographyProps={{
@@ -186,7 +202,7 @@ const JobLimits = ({ showErrorAnnouncer }) => {
                     </div>
                 </FormControl>
             </CardContent>
-        </Card>
+        </StyledCard>
     );
 };
 

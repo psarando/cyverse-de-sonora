@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { styled } from "@mui/material/styles";
+
 import { useUserProfile } from "contexts/userProfile";
 import NotAuthorized from "components/error/NotAuthorized";
 
@@ -8,8 +10,6 @@ import { i18n, RequiredNamespaces, useTranslation } from "i18n";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { useQuery } from "react-query";
-
-import { makeStyles } from "@mui/styles";
 
 import WrappedErrorHandler from "components/error/WrappedErrorHandler";
 
@@ -34,6 +34,12 @@ import InstantLaunchList from "components/instantlaunches/admin/InstantLaunchLis
 import InstantLaunchMapping from "components/instantlaunches/admin/InstantLaunchMapping";
 import VICEAdminTabs from "components/vice/admin/tabs";
 
+const PREFIX = "VICEAdmin";
+
+const classes = {
+    root: `${PREFIX}-root`,
+};
+
 const id = (...values) => buildID(ids.ROOT, ...values);
 const TABS = {
     quotaRequests: "QUOTA REQUESTS",
@@ -43,7 +49,6 @@ const TABS = {
 };
 
 const VICEAdminSkeleton = () => {
-    const classes = useStyles();
     return (
         <>
             <Skeleton
@@ -52,7 +57,6 @@ const VICEAdminSkeleton = () => {
                 height={100}
                 width="100%"
                 id="vice-admin-skeleton-0"
-                classes={{ root: classes.filterSkeleton }}
             />
             <Skeleton
                 variant="rectangular"
@@ -65,29 +69,7 @@ const VICEAdminSkeleton = () => {
     );
 };
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3),
-        paddingTop: theme.spacing(3),
-        [theme.breakpoints.down("md")]: {
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            paddingTop: theme.spacing(1),
-        },
-        [theme.breakpoints.down("sm")]: {
-            paddingLeft: theme.spacing(0.5),
-            paddingRight: theme.spacing(0.5),
-            paddingTop: theme.spacing(0.5),
-        },
-        paddingBottom: 0,
-        overflow: "auto",
-        height: "90vh",
-    },
-}));
-
 export const VICEAdmin = () => {
-    const classes = useStyles();
     const [selectedTab, setSelectedTab] = useState(TABS.quotaRequests);
     const { t } = useTranslation("vice-admin");
 
@@ -211,12 +193,33 @@ export const VICEAdmin = () => {
     );
 };
 
+const StyledVICEAdmin = styled(VICEAdmin)(({ theme }) => ({
+    [`& .${classes.root}`]: {
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3),
+        paddingTop: theme.spacing(3),
+        [theme.breakpoints.down("md")]: {
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            paddingTop: theme.spacing(1),
+        },
+        [theme.breakpoints.down("sm")]: {
+            paddingLeft: theme.spacing(0.5),
+            paddingRight: theme.spacing(0.5),
+            paddingTop: theme.spacing(0.5),
+        },
+        paddingBottom: 0,
+        overflow: "auto",
+        height: "90vh",
+    },
+}));
+
 export default function VICEAdminPage() {
     const profile = useUserProfile()[0];
     if (!profile?.admin) {
         return <NotAuthorized />;
     } else {
-        return <VICEAdmin />;
+        return <StyledVICEAdmin />;
     }
 }
 

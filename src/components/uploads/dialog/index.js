@@ -6,6 +6,7 @@
  * @module uploads/dialog
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import {
     Button,
@@ -19,20 +20,28 @@ import {
     useTheme,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { Close as CloseIcon } from "@mui/icons-material";
 import buildID from "components/utils/DebugIDUtil";
 import UploadQueue from "../queue";
 import ids from "./ids";
 
-const useStyles = makeStyles((theme) => ({
-    closeDialog: {
+const PREFIX = 'UploadDialog';
+
+const classes = {
+    closeDialog: `${PREFIX}-closeDialog`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.closeDialog}`]: {
         position: "absolute",
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.blueGrey,
-    },
+    }
 }));
 
 /**
@@ -44,13 +53,13 @@ const useStyles = makeStyles((theme) => ({
  * @returns {Object}
  */
 const UploadDialog = ({ open, handleClose = () => {} }) => {
-    const classes = useStyles();
+
     const theme = useTheme();
     const { t } = useTranslation("upload");
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     return (
-        <Dialog
+        <StyledDialog
             fullScreen={fullScreen}
             open={open}
             onClose={handleClose}
@@ -87,7 +96,7 @@ const UploadDialog = ({ open, handleClose = () => {} }) => {
                     {t("close")}
                 </Button>
             </DialogActions>
-        </Dialog>
+        </StyledDialog>
     );
 };
 

@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import { useQueryClient, useMutation, useQuery } from "react-query";
@@ -47,17 +48,24 @@ import {
     Typography,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
 import Close from "@mui/icons-material/Close";
 import LinkIcon from "@mui/icons-material/Link";
 
-const TABS = {
-    appInfo: "APP INFORMATION",
-    toolInfo: "TOOL(S) USED BY THIS APP",
-    docs: "APP DOCS",
+const PREFIX = 'DetailsDrawer';
+
+const classes = {
+    drawerPaper: `${PREFIX}-drawerPaper`,
+    drawerHeader: `${PREFIX}-drawerHeader`,
+    drawerSubHeader: `${PREFIX}-drawerSubHeader`,
+    headerOperations: `${PREFIX}-headerOperations`
 };
-const useStyles = makeStyles((theme) => ({
-    drawerPaper: {
+
+const StyledDrawer = styled(Drawer)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.drawerPaper}`]: {
         [theme.breakpoints.up("xl")]: {
             maxWidth: "25%",
         },
@@ -69,23 +77,30 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 
-    drawerHeader: {
+    [`& .${classes.drawerHeader}`]: {
         margin: theme.spacing(1),
         display: "flex",
         flexDirection: "row",
         maxWidth: "100%",
     },
-    drawerSubHeader: {
+
+    [`& .${classes.drawerSubHeader}`]: {
         marginLeft: theme.spacing(2),
         display: "flex",
         flexDirection: "row",
         maxWidth: "100%",
     },
 
-    headerOperations: {
+    [`& .${classes.headerOperations}`]: {
         marginLeft: theme.spacing(1),
-    },
+    }
 }));
+
+const TABS = {
+    appInfo: "APP INFORMATION",
+    toolInfo: "TOOL(S) USED BY THIS APP",
+    docs: "APP DOCS",
+};
 
 function DetailsHeader({
     appId,
@@ -175,7 +190,7 @@ function DetailsSubHeader({
 }
 
 function DetailsDrawer(props) {
-    const classes = useStyles();
+
     const {
         systemId,
         appId,
@@ -313,7 +328,7 @@ function DetailsDrawer(props) {
     };
 
     return (
-        <Drawer
+        <StyledDrawer
             onClose={handleClose}
             open={open}
             anchor="right"
@@ -437,7 +452,7 @@ function DetailsDrawer(props) {
                     onClose();
                 }}
             />
-        </Drawer>
+        </StyledDrawer>
     );
 }
 

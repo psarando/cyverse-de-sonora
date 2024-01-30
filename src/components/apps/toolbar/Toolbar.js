@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import Link from "next/link";
 import { useTranslation } from "i18n";
 
@@ -27,7 +28,6 @@ import {
     Toolbar,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
 import {
     Add as CreateAppIcon,
     Build,
@@ -40,6 +40,39 @@ import Autocomplete from "@mui/material/Autocomplete";
 import SharingButton from "components/sharing/SharingButton";
 import useBreakpoints from "components/layout/useBreakpoints";
 
+const PREFIX = 'AppsToolbar';
+
+const classes = {
+    divider: `${PREFIX}-divider`,
+    filter: `${PREFIX}-filter`,
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.divider}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.filter}`]: {
+        width: 200,
+        margin: theme.spacing(1),
+    },
+
+    [`& .${classes.toolbarItems}`]: {
+        [theme.breakpoints.down("sm")]: {
+            margin: theme.spacing(0.5),
+        },
+        [theme.breakpoints.up("sm")]: {
+            margin: theme.spacing(1),
+        },
+    }
+}));
+
 export const ADMIN_APPS_FILTER_VALUES = {
     PRIVATE: "private",
     PUBLIC: "public",
@@ -47,7 +80,7 @@ export const ADMIN_APPS_FILTER_VALUES = {
 };
 
 function PermissionsFilter(props) {
-    const { baseId, filter, handleFilterChange, classes } = props;
+    const { baseId, filter, handleFilterChange, } = props;
     const { t } = useTranslation("apps");
     return (
         <Autocomplete
@@ -93,32 +126,6 @@ function getOwnershipFilters(t) {
     ];
 }
 
-/**
- *
- * A toolbar with menu and navigation actions for apps
- *
- * @param props
- * @constructor
- */
-
-const useStyles = makeStyles((theme) => ({
-    divider: {
-        flexGrow: 1,
-    },
-    filter: {
-        width: 200,
-        margin: theme.spacing(1),
-    },
-    toolbarItems: {
-        [theme.breakpoints.down("sm")]: {
-            margin: theme.spacing(0.5),
-        },
-        [theme.breakpoints.up("sm")]: {
-            margin: theme.spacing(1),
-        },
-    },
-}));
-
 function AppsToolbar(props) {
     const {
         handleCategoryChange,
@@ -144,13 +151,13 @@ function AppsToolbar(props) {
         handleAdminOwnershipFilterChange,
     } = props;
     const { t } = useTranslation("apps");
-    const classes = useStyles();
+
     const appsToolbarId = buildID(baseId, ids.APPS_TOOLBAR);
     const [openFilterDialog, setOpenFilterDialog] = useState(false);
     const { isSmDown, isMdDown, isMdUp } = useBreakpoints();
 
     return (
-        <>
+        (<Root>
             {isAdminView && (
                 <Toolbar variant="dense">
                     <SearchField
@@ -314,7 +321,6 @@ function AppsToolbar(props) {
                     )}
                 </Toolbar>
             )}
-
             <Dialog open={openFilterDialog}>
                 <DialogContent>
                     <AppsTypeFilter
@@ -334,7 +340,7 @@ function AppsToolbar(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </>
+        </Root>)
     );
 }
 

@@ -6,6 +6,7 @@
  *
  */
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "../ids";
@@ -27,11 +28,24 @@ import {
     Divider,
     Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 
-const useStyles = makeStyles((theme) => ({
-    heading: {
+const PREFIX = 'InfoPanel';
+
+const classes = {
+    heading: `${PREFIX}-heading`,
+    accordionDetails: `${PREFIX}-accordionDetails`,
+    root: `${PREFIX}-root`
+};
+
+const StyledStep
+ = styled(Step
+)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.heading}`]: {
         color: theme.palette.info,
         [theme.breakpoints.down("md")]: {
             maxWidth: 150,
@@ -40,17 +54,19 @@ const useStyles = makeStyles((theme) => ({
             overflow: "hidden",
         },
     },
-    accordionDetails: {
+
+    [`& .${classes.accordionDetails}`]: {
         display: "block",
     },
-    root: {
+
+    [`& .${classes.root}`]: {
         width: "100%",
-    },
+    }
 }));
 
 function Updates(props) {
     const { updates, baseId } = props;
-    const classes = useStyles();
+
     const sortedUpdates = [...updates].reverse();
     return (
         <List className={classes.root} id={baseId}>
@@ -79,7 +95,7 @@ function Updates(props) {
 function Step(props) {
     const { step_number, step_type, status, updates } = props.step;
     const { baseId } = props;
-    const classes = useStyles();
+
     return (
         <Accordion id={baseId}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>

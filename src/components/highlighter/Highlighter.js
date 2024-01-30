@@ -1,25 +1,29 @@
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { Highlight } from "react-highlighter-ts";
 import PropTypes from "prop-types";
-import withStyles from "@mui/styles/withStyles";
+const PREFIX = 'Highlighter';
 
-/**
- * @author aramsey
- * A function which will take a search term and some text,
- * and highlight the search term within the text
- */
+const classes = {
+    highlightColor: `${PREFIX}-highlightColor`
+};
 
-const styles = (theme) => ({
-    highlightColor: {
+const StyledHighlight = styled(Highlight)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.highlightColor}`]: {
         background: "#FF0",
-    },
-});
+    }
+}));
+
 function Highlighter(props) {
-    let { search, children, classes } = props;
+    let { search, children, } = props;
     return (
-        <Highlight matchClass={classes.highlightColor} search={search}>
+        <StyledHighlight matchClass={classes.highlightColor} search={search}>
             {children}
-        </Highlight>
+        </StyledHighlight>
     );
 }
 
@@ -28,4 +32,4 @@ Highlighter.propTypes = {
     children: PropTypes.any.isRequired,
 };
 
-export default withStyles(styles)(Highlighter);
+export default (Highlighter);

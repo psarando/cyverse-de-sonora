@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import AnalysesDotMenu from "./AnalysesDotMenu";
@@ -31,8 +32,6 @@ import {
     useTheme,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import Autocomplete from "@mui/material/Autocomplete";
 
 import {
@@ -47,30 +46,49 @@ import Sharing from "components/sharing";
 import { formatSharedAnalyses } from "components/sharing/util";
 import useBreakpoints from "components/layout/useBreakpoints";
 
-const useStyles = makeStyles((theme) => ({
-    menuButton: {
+const PREFIX = 'AnalysesToolbar';
+
+const classes = {
+    menuButton: `${PREFIX}-menuButton`,
+    divider: `${PREFIX}-divider`,
+    filter: `${PREFIX}-filter`,
+    filterIcon: `${PREFIX}-filterIcon`,
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.menuButton}`]: {
         color: theme.palette.info.contrastText,
     },
-    divider: {
+
+    [`& .${classes.divider}`]: {
         flexGrow: 1,
     },
-    filter: {
+
+    [`& .${classes.filter}`]: {
         width: 175,
         margin: theme.spacing(0.5),
     },
-    filterIcon: {
+
+    [`& .${classes.filterIcon}`]: {
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0.2),
             paddingLeft: 0,
         },
     },
-    toolbarItems: {
+
+    [`& .${classes.toolbarItems}`]: {
         margin: theme.spacing(0.5),
-    },
+    }
 }));
 
 function PermissionsFilter(props) {
-    const { baseId, filter, handleFilterChange, classes } = props;
+    const { baseId, filter, handleFilterChange, } = props;
     const { t } = useTranslation("analyses");
     return (
         <Autocomplete
@@ -106,7 +124,7 @@ function getOwnershipFilters(t) {
 }
 
 function ClearFilter(props) {
-    const { baseId, classes, onClearFilter } = props;
+    const { baseId,  onClearFilter } = props;
     const { t } = useTranslation("analyses");
 
     return (
@@ -156,7 +174,7 @@ function AnalysesToolbar(props) {
         onRefreshSelected,
         setVICELogsDlgOpen,
     } = props;
-    const classes = useStyles();
+
     const theme = useTheme();
     const { t } = useTranslation("analyses");
     const [config] = useConfig();
@@ -172,7 +190,7 @@ function AnalysesToolbar(props) {
     const { isSmDown, isMdDown } = useBreakpoints();
 
     return (
-        <>
+        (<Root>
             <Toolbar variant="dense" id={analysesNavId} style={{ padding: 0 }}>
                 {!isSmDown && (
                     <>
@@ -319,7 +337,7 @@ function AnalysesToolbar(props) {
                 onClose={() => setSharingDlgOpen(false)}
                 resources={sharingAnalyses}
             />
-        </>
+        </Root>)
     );
 }
 

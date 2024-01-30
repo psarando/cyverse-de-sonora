@@ -5,6 +5,8 @@
  */
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useTranslation } from "i18n";
 
 import {
@@ -16,20 +18,30 @@ import {
     CardHeader,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { Skeleton } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-    cardContent: {
+const PREFIX = 'AppStepDisplay';
+
+const classes = {
+    cardContent: `${PREFIX}-cardContent`,
+    cardActions: `${PREFIX}-cardActions`
+};
+
+const StyledCard = styled(Card)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.cardContent}`]: {
         overflow: "auto",
         [theme.breakpoints.down("sm")]: {
             padding: theme.spacing(1),
         },
     },
-    cardActions: {
+
+    [`& .${classes.cardActions}`]: {
         justifyContent: "flex-end",
-    },
+    }
 }));
 
 export const BottomNavigationSkeleton = React.forwardRef((props, ref) => (
@@ -54,10 +66,10 @@ const AppStepDisplay = (props) => {
     } = props;
 
     const { t } = useTranslation("launch");
-    const classes = useStyles();
+
 
     return (
-        <Card style={{ marginBottom: bottomOffset && `${bottomOffset}px` }}>
+        <StyledCard style={{ marginBottom: bottomOffset && `${bottomOffset}px` }}>
             <CardHeader
                 title={t("stepLabel", { step, label })}
                 titleTypographyProps={{
@@ -76,7 +88,7 @@ const AppStepDisplay = (props) => {
             <CardActions disableSpacing className={classes.cardActions}>
                 {bottomNavigation}
             </CardActions>
-        </Card>
+        </StyledCard>
     );
 };
 

@@ -7,6 +7,7 @@
  */
 
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import AnimatedNumber from "animated-number-react";
 
@@ -35,22 +36,38 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import AppsIcon from "@mui/icons-material/Apps";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { useConfig } from "contexts/config";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'DetailedSearchResults';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    tabIndicator: `${PREFIX}-tabIndicator`,
+    tabRoot: `${PREFIX}-tabRoot`,
+    selectedTabIcon: `${PREFIX}-selectedTabIcon`,
+    tabIcon: `${PREFIX}-tabIcon`,
+    searchInfo: `${PREFIX}-searchInfo`
+};
+
+const StyledPaper = styled(Paper)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
         flexGrow: 1,
         margin: 0,
         padding: 0,
     },
-    tabIndicator: {
+
+    [`& .${classes.tabIndicator}`]: {
         backgroundColor: theme.palette.secondary.main,
     },
-    tabRoot: {
+
+    [`& .${classes.tabRoot}`]: {
         padding: theme.spacing(0.25),
         margin: 0,
         height: 72,
@@ -58,17 +75,20 @@ const useStyles = makeStyles((theme) => ({
             height: 68,
         },
     },
-    selectedTabIcon: {
+
+    [`& .${classes.selectedTabIcon}`]: {
         fontSize: "1.5rem",
     },
-    tabIcon: {
+
+    [`& .${classes.tabIcon}`]: {
         color: theme.palette.info.main,
         fontSize: "1.5rem",
     },
-    searchInfo: {
+
+    [`& .${classes.searchInfo}`]: {
         color: theme.palette.info.main,
         margin: theme.spacing(0.25),
-    },
+    }
 }));
 
 function DetailedSearchResults(props) {
@@ -79,7 +99,7 @@ function DetailedSearchResults(props) {
         selectedTab,
         onTabSelectionChange,
     } = props;
-    const classes = useStyles();
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const { t } = useTranslation(["common", "search"]);
@@ -133,7 +153,7 @@ function DetailedSearchResults(props) {
     }
 
     return (
-        <Paper className={classes.root}>
+        <StyledPaper className={classes.root}>
             {!isMobile && (
                 <Typography className={classes.searchInfo}>
                     {advancedDataQuery
@@ -257,7 +277,7 @@ function DetailedSearchResults(props) {
                     baseId={teamTabId}
                 />
             </DETabPanel>
-        </Paper>
+        </StyledPaper>
     );
 }
 

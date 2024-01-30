@@ -4,6 +4,8 @@
 
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useTranslation } from "i18n";
 import ErrorIcon from "@mui/icons-material/Error";
 import buildID from "components/utils/DebugIDUtil";
@@ -17,32 +19,42 @@ import {
     Typography,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import ClientInfo from "../error/ClientInfo";
 import ContactSupport from "../error/ContactSupport";
 import ids from "./ids";
 
-const useStyles = makeStyles((theme) => ({
-    cardContent: {
+const PREFIX = 'OAuthErrorHandler';
+
+const classes = {
+    cardContent: `${PREFIX}-cardContent`,
+    container: `${PREFIX}-container`
+};
+
+const StyledCard = styled(Card)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.cardContent}`]: {
         padding: theme.spacing(2),
         [theme.breakpoints.down("sm")]: {
             padding: theme.spacing(1),
         },
     },
-    container: {
+
+    [`& .${classes.container}`]: {
         margin: theme.spacing(1),
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0),
         },
-    },
+    }
 }));
 
 function OAuthErrorHandler(props) {
     const { errorCode, baseId } = props;
     const { t } = useTranslation("oauth");
     const errorBaseId = buildID(baseId, ids.OAUTH_ERROR_HANDLER);
-    const classes = useStyles();
+
 
     const avatar = <ErrorIcon fontSize="large" color="error" />;
     const title = (
@@ -52,7 +64,7 @@ function OAuthErrorHandler(props) {
     );
 
     return (
-        <Card id={errorBaseId}>
+        <StyledCard id={errorBaseId}>
             <CardHeader
                 avatar={avatar}
                 title={title}
@@ -69,7 +81,7 @@ function OAuthErrorHandler(props) {
             <CardActions>
                 <ContactSupport baseId={errorBaseId} />
             </CardActions>
-        </Card>
+        </StyledCard>
     );
 }
 

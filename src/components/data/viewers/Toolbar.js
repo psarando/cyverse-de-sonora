@@ -7,6 +7,8 @@
  */
 import React, { useEffect, useState } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import { useTranslation } from "i18n";
 import { NavigationParams } from "common/NavigationConstants";
@@ -48,7 +50,6 @@ import {
     useTheme,
     Tooltip,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import {
     Add,
     CloudDownload,
@@ -61,24 +62,43 @@ import {
     Edit as EditableIcon,
 } from "@mui/icons-material";
 
-const useStyles = makeStyles((theme) => ({
-    divider: {
+const PREFIX = 'Toolbar';
+
+const classes = {
+    divider: `${PREFIX}-divider`,
+    toolbarItems: `${PREFIX}-toolbarItems`,
+    separator: `${PREFIX}-separator`,
+    editIcon: `${PREFIX}-editIcon`,
+    toolbar: `${PREFIX}-toolbar`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.divider}`]: {
         flexGrow: 1,
     },
-    toolbarItems: {
+
+    [`& .${classes.toolbarItems}`]: {
         margin: theme.spacing(0.5),
     },
-    separator: {
+
+    [`& .${classes.separator}`]: {
         margin: theme.spacing(0.5),
     },
-    editIcon: {
+
+    [`& .${classes.editIcon}`]: {
         color: theme.palette.info.main,
         marginLeft: theme.spacing(0.5),
         cursor: "pointer",
     },
-    toolbar: {
+
+    [`& .${classes.toolbar}`]: {
         padding: theme.spacing(0.5),
-    },
+    }
 }));
 
 function ViewerToolbar(props) {
@@ -123,7 +143,7 @@ function ViewerToolbar(props) {
     const [saveNewFileError, setSaveNewFileError] = useState(null);
     const [fileSavePath, setFileSavePath] = useState();
 
-    const classes = useStyles();
+
     const { isSmDown, isMdDown } = useBreakpoints();
 
     // Get QueryClient from the context
@@ -231,7 +251,7 @@ function ViewerToolbar(props) {
                 color="primary"
                 {...props}
             >
-                {!isSmDown && <>{text}</>}
+                {!isSmDown && <Root>{text}</Root>}
             </Button>
         );
     };

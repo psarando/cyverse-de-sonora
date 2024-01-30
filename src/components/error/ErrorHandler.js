@@ -4,6 +4,7 @@
  * A component that displays formatted error message with options to contact support or login
  */
 import React, { useEffect } from "react";
+import { styled } from '@mui/material/styles';
 import { useRouter } from "next/router";
 import { useTranslation } from "i18n";
 
@@ -26,38 +27,53 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import ErrorIcon from "@mui/icons-material/Error";
 import WarningIcon from "@mui/icons-material/Warning";
 import { trackIntercomEvent, IntercomEvents } from "common/intercom";
 
-const useStyles = makeStyles((theme) => ({
-    cardContent: {
+const PREFIX = 'ErrorHandler';
+
+const classes = {
+    cardContent: `${PREFIX}-cardContent`,
+    container: `${PREFIX}-container`,
+    signIn: `${PREFIX}-signIn`,
+    link: `${PREFIX}-link`
+};
+
+const StyledCard = styled(Card)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.cardContent}`]: {
         padding: theme.spacing(2),
         [theme.breakpoints.down("sm")]: {
             padding: theme.spacing(1),
         },
     },
-    container: {
+
+    [`& .${classes.container}`]: {
         margin: theme.spacing(1),
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0),
         },
     },
-    signIn: {
+
+    [`& .${classes.signIn}`]: {
         padding: theme.spacing(1),
     },
-    link: {
+
+    [`& .${classes.link}`]: {
         cursor: "pointer",
-    },
+    }
 }));
 
 function ErrorHandler(props) {
     const { errorObject, baseId } = props;
     const { t } = useTranslation("util");
     const router = useRouter();
-    const classes = useStyles();
+
     const errBaseId = buildID(baseId, ids.ERROR_HANDLER);
 
     useEffect(() => {
@@ -231,7 +247,7 @@ function ErrorHandler(props) {
         }
     }
     return (
-        <Card id={errBaseId}>
+        <StyledCard id={errBaseId}>
             <CardHeader avatar={avatar} title={title} subheader={subHeader} />
             <Divider orientation="horizontal" />
             <CardContent className={classes.cardContent}>
@@ -241,7 +257,7 @@ function ErrorHandler(props) {
             <CardActions>
                 <ContactSupport baseId={errBaseId} />
             </CardActions>
-        </Card>
+        </StyledCard>
     );
 }
 

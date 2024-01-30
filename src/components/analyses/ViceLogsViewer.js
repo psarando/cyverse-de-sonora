@@ -7,6 +7,8 @@
 
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import ids from "./ids";
 import DEDialog from "components/utils/DEDialog";
 import { useTranslation } from "i18n";
@@ -29,19 +31,27 @@ import {
     Toolbar,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-const useStyles = makeStyles((theme) => ({
-    toolbarItems: {
+const PREFIX = 'ViceLogsViewer';
+
+const classes = {
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+const StyledDEDialog = styled(DEDialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.toolbarItems}`]: {
         margin: theme.spacing(0.5),
-    },
+    }
 }));
 
 function ViceLogsViewer(props) {
     const { open, getSelectedAnalyses, onClose } = props;
-    const classes = useStyles();
+
     const { t } = useTranslation("analyses");
     // Get QueryClient from the context
     const queryClient = useQueryClient();
@@ -74,7 +84,7 @@ function ViceLogsViewer(props) {
     };
 
     return (
-        <DEDialog
+        <StyledDEDialog
             open={open}
             maxWidth="sm"
             disableEscapeKeyDown
@@ -143,7 +153,7 @@ function ViceLogsViewer(props) {
                     setEditorValue={setLogsToDisplay}
                 />
             )}
-        </DEDialog>
+        </StyledDEDialog>
     );
 }
 

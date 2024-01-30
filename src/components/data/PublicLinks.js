@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useMutation, useQuery } from "react-query";
 
 import { useTranslation } from "i18n";
@@ -40,7 +41,6 @@ import {
     useTheme,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
 import { Skeleton } from "@mui/material";
 
 import {
@@ -52,20 +52,33 @@ import {
     Cached,
 } from "@mui/icons-material";
 
-const useStyles = makeStyles((theme) => ({
-    toolbarButtons: {
+const PREFIX = 'PublicLinks';
+
+const classes = {
+    toolbarButtons: `${PREFIX}-toolbarButtons`,
+    paper: `${PREFIX}-paper`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.toolbarButtons}`]: {
         margin: theme.spacing(0.2),
     },
-    paper: {
+
+    [`& .${classes.paper}`]: {
         padding: theme.spacing(0.2),
         flexGrow: 1,
-    },
+    }
 }));
 
 const DEFAULT_FILE_NAME = "de-links.txt";
 
 function PublicLinks(props) {
-    const classes = useStyles();
+
     const { baseId, paths } = props;
     const theme = useTheme();
     const [links, setLinks] = useState();
@@ -180,7 +193,7 @@ function PublicLinks(props) {
     }
 
     return (
-        <>
+        (<Root>
             <Paper className={classes.paper} elevation={0}>
                 {successMsg && (
                     <>
@@ -297,7 +310,7 @@ function PublicLinks(props) {
                 loading={fileSaveStatus === constants.LOADING}
                 setSaveNewFileError={setSaveNewFileError}
             />
-        </>
+        </Root>)
     );
 }
 export default PublicLinks;

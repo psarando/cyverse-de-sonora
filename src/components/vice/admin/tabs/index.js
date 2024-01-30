@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useMutation, useQueryClient } from "react-query";
 
 import { useTranslation } from "i18n";
@@ -8,7 +10,7 @@ import { AppBar, Tab } from "@mui/material";
 
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
-import { makeStyles, useTheme } from "@mui/styles";
+import { useTheme } from "@mui/styles";
 
 import buildID from "components/utils/DebugIDUtil";
 
@@ -25,6 +27,85 @@ import {
 
 import columns from "./columns";
 import ids from "components/vice/admin/ids";
+
+const PREFIX = 'VICEAdminTabs';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    filterSkeleton: `${PREFIX}-filterSkeleton`,
+    footer: `${PREFIX}-footer`,
+    refresh: `${PREFIX}-refresh`,
+    tabAppBarColorPrimary: `${PREFIX}-tabAppBarColorPrimary`,
+    tabRoot: `${PREFIX}-tabRoot`,
+    tabSelected: `${PREFIX}-tabSelected`,
+    tabPanelRoot: `${PREFIX}-tabPanelRoot`
+};
+
+const StyledTabContext = styled(TabContext)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3),
+        paddingTop: theme.spacing(3),
+        [theme.breakpoints.down("md")]: {
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            paddingTop: theme.spacing(1),
+        },
+        [theme.breakpoints.down("sm")]: {
+            paddingLeft: theme.spacing(0.5),
+            paddingRight: theme.spacing(0.5),
+            paddingTop: theme.spacing(0.5),
+        },
+        paddingBottom: 0,
+        overflow: "auto",
+        height: "90vh",
+    },
+
+    [`& .${classes.filterSkeleton}`]: {
+        marginBottom: theme.spacing(5),
+    },
+
+    [`& .${classes.footer}`]: {
+        width: "100%",
+        height: theme.spacing(5),
+
+        [theme.breakpoints.down("md")]: {
+            height: 32,
+        },
+    },
+
+    [`& .${classes.refresh}`]: {
+        marginBottom: theme.spacing(1),
+        marginTop: theme.spacing(1),
+    },
+
+    [`& .${classes.tabAppBarColorPrimary}`]: {
+        backgroundColor: theme.palette.white,
+    },
+
+    [`& .${classes.tabRoot}`]: {
+        color: theme.palette.darkGray,
+        "&:hover": {
+            color: theme.palette.black,
+        },
+    },
+
+    [`& .${classes.tabSelected}`]: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },
+
+    [`& .${classes.tabPanelRoot}`]: {
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+    }
+}));
 
 const getAnalyses = ({ deployments = [] }) => {
     let analyses = {};
@@ -49,63 +130,8 @@ const getAnalyses = ({ deployments = [] }) => {
     return Object.values(analyses);
 };
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3),
-        paddingTop: theme.spacing(3),
-        [theme.breakpoints.down("md")]: {
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            paddingTop: theme.spacing(1),
-        },
-        [theme.breakpoints.down("sm")]: {
-            paddingLeft: theme.spacing(0.5),
-            paddingRight: theme.spacing(0.5),
-            paddingTop: theme.spacing(0.5),
-        },
-        paddingBottom: 0,
-        overflow: "auto",
-        height: "90vh",
-    },
-    filterSkeleton: {
-        marginBottom: theme.spacing(5),
-    },
-    footer: {
-        width: "100%",
-        height: theme.spacing(5),
-
-        [theme.breakpoints.down("md")]: {
-            height: 32,
-        },
-    },
-    refresh: {
-        marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(1),
-    },
-    tabAppBarColorPrimary: {
-        backgroundColor: theme.palette.white,
-    },
-    tabRoot: {
-        color: theme.palette.darkGray,
-        "&:hover": {
-            color: theme.palette.black,
-        },
-    },
-    tabSelected: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-    },
-    tabPanelRoot: {
-        paddingLeft: 0,
-        paddingRight: 0,
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
-    },
-}));
-
 const VICEAdminTabs = ({ data = {} }) => {
-    const classes = useStyles();
+
     const { t } = useTranslation("vice-admin");
     const theme = useTheme();
 
@@ -149,7 +175,7 @@ const VICEAdminTabs = ({ data = {} }) => {
     ];
 
     return (
-        <TabContext value={value}>
+        <StyledTabContext value={value}>
             <AppBar
                 position="static"
                 color="primary"
@@ -241,7 +267,7 @@ const VICEAdminTabs = ({ data = {} }) => {
                     />
                 </TabPanel>
             ))}
-        </TabContext>
+        </StyledTabContext>
     );
 };
 

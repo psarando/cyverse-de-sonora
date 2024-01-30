@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useRouter } from "next/router";
 import { useTranslation } from "i18n";
 
@@ -23,23 +25,36 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
+const PREFIX = 'DEPagination';
+
+const classes = {
+    paper: `${PREFIX}-paper`,
+    paginationItems: `${PREFIX}-paginationItems`,
+    buttonPadding: `${PREFIX}-buttonPadding`
+};
+
+const StyledPaper = styled(Paper)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.paper}`]: {
         flexShrink: 0,
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
     },
-    paginationItems: {
+
+    [`& .${classes.paginationItems}`]: {
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1),
         color: theme.palette.info,
     },
-    buttonPadding: {
+
+    [`& .${classes.buttonPadding}`]: {
         paddingTop: theme.spacing(1.5),
-    },
+    }
 }));
 
 const options = [100, 200, 500];
@@ -65,7 +80,7 @@ function ItemsPerPage(props) {
 
     const { t } = useTranslation("util");
 
-    const classes = useStyles();
+
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
 
@@ -94,71 +109,69 @@ function ItemsPerPage(props) {
         setOpen(false);
     };
     const menuId = buildID(baseId, ids.PAGE_SIZE_MENU);
-    return (
-        <>
-            <Tooltip title={t("selectPageSize")}>
-                <Button
-                    className={classes.buttonPadding}
-                    color="primary"
-                    size="small"
-                    ref={anchorRef}
-                    aria-controls={open ? menuId : undefined}
-                    aria-expanded={open ? "true" : undefined}
-                    aria-label={t("selectPageSize")}
-                    aria-haspopup="menu"
-                    onClick={handleToggle}
-                >
-                    {selectedPageSize} <ArrowDropDownIcon />
-                </Button>
-            </Tooltip>
-            <Popper
-                open={open}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                transition
-                disablePortal
+    return <>
+        <Tooltip title={t("selectPageSize")}>
+            <Button
+                className={classes.buttonPadding}
+                color="primary"
+                size="small"
+                ref={anchorRef}
+                aria-controls={open ? menuId : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-label={t("selectPageSize")}
+                aria-haspopup="menu"
+                onClick={handleToggle}
             >
-                {({ TransitionProps, placement }) => (
-                    <Grow
-                        {...TransitionProps}
-                        style={{
-                            transformOrigin:
-                                placement === "bottom"
-                                    ? "center top"
-                                    : "center bottom",
-                        }}
-                    >
-                        <Paper>
-                            <ClickAwayListener onClickAway={handleClose}>
-                                <MenuList id={menuId}>
-                                    {options.map((option, index) => (
-                                        <MenuItem
-                                            key={option}
-                                            selected={
-                                                option === selectedPageSize
-                                            }
-                                            onClick={(event) =>
-                                                handleMenuItemClick(
-                                                    event,
-                                                    index
-                                                )
-                                            }
-                                        >
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </MenuList>
-                            </ClickAwayListener>
-                        </Paper>
-                    </Grow>
-                )}
-            </Popper>
-        </>
-    );
+                {selectedPageSize} <ArrowDropDownIcon />
+            </Button>
+        </Tooltip>
+        <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+            disablePortal
+        >
+            {({ TransitionProps, placement }) => (
+                <Grow
+                    {...TransitionProps}
+                    style={{
+                        transformOrigin:
+                            placement === "bottom"
+                                ? "center top"
+                                : "center bottom",
+                    }}
+                >
+                    <StyledPaper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList id={menuId}>
+                                {options.map((option, index) => (
+                                    <MenuItem
+                                        key={option}
+                                        selected={
+                                            option === selectedPageSize
+                                        }
+                                        onClick={(event) =>
+                                            handleMenuItemClick(
+                                                event,
+                                                index
+                                            )
+                                        }
+                                    >
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        </ClickAwayListener>
+                    </StyledPaper>
+                </Grow>
+            )}
+        </Popper>
+    </>;
 }
 
 function DEPagination(props) {
-    const classes = useStyles();
+
     const theme = useTheme();
     const { onChange, page, totalPages, onPageSizeChange, pageSize, baseId } =
         props;

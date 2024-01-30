@@ -7,6 +7,8 @@
 
 import React, { useState } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import ids from "./ids";
 
 import buildID from "components/utils/DebugIDUtil";
@@ -17,36 +19,47 @@ import {
     AccordionSummary,
     Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { ExpandMore } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
-const styles = (theme) => ({
-    expansionDetails: {
+const PREFIX = 'SimpleExpansionPanel';
+
+const classes = {
+    expansionDetails: `${PREFIX}-expansionDetails`,
+    paramsViewSummary: `${PREFIX}-paramsViewSummary`,
+    paramsViewsExpandIcon: `${PREFIX}-paramsViewsExpandIcon`
+};
+
+const StyledAccordion = styled(Accordion)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.expansionDetails}`]: {
         flexDirection: "column",
     },
-    paramsViewSummary: {
+
+    [`& .${classes.paramsViewSummary}`]: {
         color: theme.palette.info.contrastText,
         backgroundColor: theme.palette.info.main,
     },
-    paramsViewsExpandIcon: {
-        color: theme.palette.info.contrastText,
-    },
-});
 
-const useStyles = makeStyles(styles);
+    [`& .${classes.paramsViewsExpandIcon}`]: {
+        color: theme.palette.info.contrastText,
+    }
+}));
 
 function SimpleExpansionPanel(props) {
     const { header, parentId, defaultExpanded, children, hasErrors } = props;
     const [expanded, setExpanded] = useState(defaultExpanded);
-    const classes = useStyles();
+
 
     const handleChange = (event, isExpanded) => {
         setExpanded(!!(isExpanded || hasErrors));
     };
 
     return (
-        <Accordion onChange={handleChange} expanded={expanded}>
+        <StyledAccordion onChange={handleChange} expanded={expanded}>
             <AccordionSummary
                 expandIcon={
                     <ExpandMore
@@ -61,7 +74,7 @@ function SimpleExpansionPanel(props) {
             <AccordionDetails classes={{ root: classes.expansionDetails }}>
                 {children}
             </AccordionDetails>
-        </Accordion>
+        </StyledAccordion>
     );
 }
 

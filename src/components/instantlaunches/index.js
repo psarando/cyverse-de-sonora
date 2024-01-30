@@ -1,5 +1,7 @@
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import {
     Dialog,
     DialogContent,
@@ -9,8 +11,6 @@ import {
     Typography,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { PlayCircleOutlineOutlined } from "@mui/icons-material";
 import { useTranslation } from "i18n";
 
@@ -18,17 +18,31 @@ import buildID from "components/utils/DebugIDUtil";
 import ids from "components/instantlaunches/ids";
 import InstantLaunchButtonWrapper from "./InstantLaunchButtonWrapper";
 
-const useStyles = makeStyles((theme) => ({
-    progress: {
+const PREFIX = 'InstantLaunchButton';
+
+const classes = {
+    progress: `${PREFIX}-progress`,
+    inProgress: `${PREFIX}-inProgress`,
+    closeAuto: `${PREFIX}-closeAuto`
+};
+
+const StyledIconButton = styled(IconButton)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.progress}`]: {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(5),
     },
-    inProgress: {
+
+    [`& .${classes.inProgress}`]: {
         marginBottom: theme.spacing(3),
     },
-    closeAuto: {
+
+    [`& .${classes.closeAuto}`]: {
         marginBottom: theme.spacing(3),
-    },
+    }
 }));
 
 /**
@@ -40,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 export const InstantLaunchSubmissionDialog = ({ open }) => {
     const baseID = buildID(ids.BASE, ids.SUBMISSION, ids.DIALOG);
     const { t } = useTranslation("instantlaunches");
-    const classes = useStyles();
+
 
     return (
         <Dialog
@@ -104,7 +118,7 @@ const InstantLaunchButton = ({
             resource={resource}
             computeLimitExceeded={computeLimitExceeded}
             render={(onClick) => (
-                <IconButton
+                <StyledIconButton
                     id={baseID}
                     variant="contained"
                     size={size}
@@ -113,7 +127,7 @@ const InstantLaunchButton = ({
                     onClick={onClick}
                 >
                     <PlayCircleOutlineOutlined />
-                </IconButton>
+                </StyledIconButton>
             )}
         />
     );

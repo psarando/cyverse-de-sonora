@@ -6,6 +6,8 @@
  */
 import React, { useCallback, useEffect, useState } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import ids from "../ids";
 
 import constants from "../../../constants";
@@ -28,7 +30,6 @@ import {
     Typography,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
 import buildID from "components/utils/DebugIDUtil";
 
 import {
@@ -44,17 +45,35 @@ import {
 import { useUserProfile } from "../../../contexts/userProfile";
 import { CollectionIcon } from "components/collections/Icons";
 
-const useStyles = makeStyles((theme) => ({
-    selectedListItem: {
+const PREFIX = 'AppNavigation';
+
+const classes = {
+    selectedListItem: `${PREFIX}-selectedListItem`,
+    list: `${PREFIX}-list`,
+    listItem: `${PREFIX}-listItem`,
+    listItemText: `${PREFIX}-listItemText`,
+    divider: `${PREFIX}-divider`,
+    selectedCategory: `${PREFIX}-selectedCategory`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.selectedListItem}`]: {
         padding: theme.spacing(0.5),
         color: theme.palette.primary.main,
         border: `1px solid ${theme.palette.primary.main}`,
     },
-    list: {
+
+    [`& .${classes.list}`]: {
         width: 250,
         margin: 0,
     },
-    listItem: {
+
+    [`& .${classes.listItem}`]: {
         outline: "none",
         cursor: "pointer",
         color: theme.palette.primary.main,
@@ -63,15 +82,18 @@ const useStyles = makeStyles((theme) => ({
             color: theme.palette.primary.contrastText,
         },
     },
-    listItemText: {
+
+    [`& .${classes.listItemText}`]: {
         width: 250,
     },
-    divider: {
+
+    [`& .${classes.divider}`]: {
         flexGrow: 1,
     },
-    selectedCategory: {
+
+    [`& .${classes.selectedCategory}`]: {
         width: 250,
-    },
+    }
 }));
 
 function AppNavigation(props) {
@@ -82,7 +104,7 @@ function AppNavigation(props) {
         selectedCategory,
         baseId,
     } = props;
-    const classes = useStyles();
+
     const { t } = useTranslation("apps");
     const [categories, setCategories] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -212,7 +234,7 @@ function AppNavigation(props) {
     }
 
     return (
-        <>
+        (<Root>
             <List
                 component="nav"
                 aria-label={t("selectedCategoryAriaLabel")}
@@ -278,7 +300,7 @@ function AppNavigation(props) {
                     </ListItem>
                 ))}
             </Menu>
-        </>
+        </Root>)
     );
 }
 

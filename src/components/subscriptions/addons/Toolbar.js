@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { Button, Toolbar } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import AddIcon from "@mui/icons-material/Add";
 import { Delete } from "@mui/icons-material";
 
@@ -9,15 +9,26 @@ import ids from "../ids";
 import buildID from "components/utils/DebugIDUtil";
 import EditAddonDialog from "./edit/EditAddon";
 
-const useStyles = makeStyles((theme) => ({
-    toolbarItems: {
+const PREFIX = 'AddonsToolbar';
+
+const classes = {
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.toolbarItems}`]: {
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0.5),
         },
         [theme.breakpoints.up("sm")]: {
             margin: theme.spacing(1),
         },
-    },
+    }
 }));
 
 function AddonsToolbar(props) {
@@ -25,10 +36,10 @@ function AddonsToolbar(props) {
     const { t } = useTranslation("subscriptions");
     const toolbarId = buildID(baseId, ids.TOOLBAR);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
-    const classes = useStyles();
+
 
     return (
-        <>
+        (<Root>
             {isAdminView && (
                 <Toolbar variant="dense">
                     <Button
@@ -59,7 +70,7 @@ function AddonsToolbar(props) {
                     )}
                 </Toolbar>
             )}
-        </>
+        </Root>)
     );
 }
 export default AddonsToolbar;

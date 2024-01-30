@@ -7,6 +7,8 @@
 
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useTranslation } from "i18n";
 import ids from "../../ids";
 import RowDotMenu from "./RowDotMenu";
@@ -30,16 +32,22 @@ import {
     Typography,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
+const PREFIX = 'TableView';
 
-const useStyles = makeStyles(() => ({
-    container: {
+const classes = {
+    container: `${PREFIX}-container`,
+    row: `${PREFIX}-row`
+};
+
+const StyledPageWrapper = styled(PageWrapper)(() => ({
+    [`& .${classes.container}`]: {
         overflow: "auto",
     },
+
     // Prevent row text from being highlighted when in a multiselection
-    row: {
+    [`& .${classes.row}`]: {
         userSelect: "none",
-    },
+    }
 }));
 
 const columnData = (t) => {
@@ -103,7 +111,7 @@ function AddOnListing(props) {
         tableId,
     } = props;
 
-    const classes = useStyles();
+
 
     return (
         addons &&
@@ -225,13 +233,13 @@ function TableView(props) {
     const tableId = buildID(baseId, ids.ADDONS.LISTING_TABLE);
     const addons = listing?.addons;
     const columns = columnData(t);
-    const classes = useStyles();
+
     if (error) {
         return <WrappedErrorHandler errorObject={error} baseId={baseId} />;
     }
 
     return (
-        <PageWrapper>
+        <StyledPageWrapper>
             {isAdminView && (
                 <TableContainer component={Paper} className={classes.container}>
                     <Table
@@ -278,7 +286,7 @@ function TableView(props) {
                     </Table>
                 </TableContainer>
             )}
-        </PageWrapper>
+        </StyledPageWrapper>
     );
 }
 

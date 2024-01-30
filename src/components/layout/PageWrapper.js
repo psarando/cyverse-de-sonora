@@ -6,23 +6,28 @@
  */
 
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
+const PREFIX = 'PageWrapper';
 
-const useStyles = makeStyles(() => ({
-    wrapper: {
+const classes = {
+    wrapper: `${PREFIX}-wrapper`
+};
+
+const Root = styled('div')(() => ({
+    [`&.${classes.wrapper}`]: {
         display: "flex",
         flexDirection: "column",
-    },
+    }
 }));
 
 function PageWrapper(props) {
     const { appBarHeight } = props;
-    const classes = useStyles();
+
     const theme = useTheme();
     return (
-        <div
+        <Root
             className={classes.wrapper}
             style={{
                 maxHeight: `calc(100vh - ${
@@ -32,7 +37,7 @@ function PageWrapper(props) {
             }}
         >
             {props.children}
-        </div>
+        </Root>
     );
 }
 

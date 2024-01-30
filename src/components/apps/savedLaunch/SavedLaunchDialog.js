@@ -4,30 +4,40 @@
  *
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import buildID from "components/utils/DebugIDUtil";
 
 import ids from "../ids";
 
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { Close } from "@mui/icons-material";
 import ListSavedLaunches from "./SavedLaunchListing";
 
-const useStyles = makeStyles((theme) => ({
-    closeButton: {
+const PREFIX = 'SavedLaunchDialog';
+
+const classes = {
+    closeButton: `${PREFIX}-closeButton`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.closeButton}`]: {
         float: "right",
-    },
+    }
 }));
 
 export default function SavedLaunchDialog(props) {
     const { baseDebugId, appName, appId, systemId, open, onClose } = props;
     const { t } = useTranslation("apps");
 
-    const classes = useStyles();
+
 
     return (
-        <Dialog open={open}>
+        <StyledDialog open={open}>
             <DialogTitle>
                 {t("savedLaunch")} - {appName}
                 <IconButton
@@ -48,6 +58,6 @@ export default function SavedLaunchDialog(props) {
                     baseDebugId={baseDebugId}
                 />
             </DialogContent>
-        </Dialog>
+        </StyledDialog>
     );
 }

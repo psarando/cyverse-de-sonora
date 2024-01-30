@@ -5,6 +5,7 @@
  *
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import Link from "next/link";
 
@@ -40,15 +41,23 @@ import {
     useTheme,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import styles from "components/utils/runningAnimation";
 
-const useStyles = makeStyles((theme) => ({
-    name: {
+const PREFIX = 'TableView';
+
+const classes = {
+    name: `${PREFIX}-name`
+};
+
+const StyledTableContainer = styled(TableContainer)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.name}`]: {
         maxWidth: "12rem",
         overflowWrap: "break-word",
-    },
+    }
 }));
 
 const useRunningAnalysesStyles = makeStyles(styles);
@@ -179,7 +188,7 @@ function TableView(props) {
     } = props;
 
     const theme = useTheme();
-    const classes = useStyles();
+
     const running = useRunningAnalysesStyles();
     const { t } = useTranslation("analyses");
 
@@ -198,7 +207,7 @@ function TableView(props) {
     }
 
     return (
-        <TableContainer component={Paper} style={{ overflow: "auto" }}>
+        <StyledTableContainer component={Paper} style={{ overflow: "auto" }}>
             <Table
                 id={tableId}
                 stickyHeader={true}
@@ -361,7 +370,7 @@ function TableView(props) {
                     </TableBody>
                 )}
             </Table>
-        </TableContainer>
+        </StyledTableContainer>
     );
 }
 

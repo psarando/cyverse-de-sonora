@@ -5,6 +5,7 @@
  *
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -16,18 +17,30 @@ import {
     useTheme,
     useMediaQuery,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import UpdateIcon from "@mui/icons-material/Update";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const useStyles = makeStyles((theme) => ({
-    divider: {
+const PREFIX = 'Toolbar';
+
+const classes = {
+    divider: `${PREFIX}-divider`,
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.divider}`]: {
         flexGrow: 1,
     },
-    toolbarItems: {
+
+    [`& .${classes.toolbarItems}`]: {
         margin: theme.spacing(1),
-    },
+    }
 }));
 
 export default function DOIToolbar(props) {
@@ -40,13 +53,13 @@ export default function DOIToolbar(props) {
     } = props;
     const { t } = useTranslation("doi");
     const { t: i18nUtil } = useTranslation("util");
-    const classes = useStyles();
+
     const toolbarId = buildID(baseId, ids.toolbarId);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
-        <>
+        (<Root>
             <Toolbar variant="dense" id={toolbarId}>
                 {!isMobile && selected && (
                     <>
@@ -121,6 +134,6 @@ export default function DOIToolbar(props) {
                     </>
                 )}
             </Toolbar>
-        </>
+        </Root>)
     );
 }

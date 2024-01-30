@@ -5,22 +5,32 @@
  **/
 
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import PropTypes from "prop-types";
 
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import CloseIcon from "@mui/icons-material/Close";
 import ErrorHandler from "./ErrorHandler";
 
-const useStyles = makeStyles((theme) => ({
-    closeButton: {
+const PREFIX = 'DEErrorDialog';
+
+const classes = {
+    closeButton: `${PREFIX}-closeButton`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.closeButton}`]: {
         position: "absolute",
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.error.main,
         padding: theme.spacing(1),
-    },
+    }
 }));
 
 const DEErrorDialog = ({
@@ -31,12 +41,12 @@ const DEErrorDialog = ({
     open,
 }) => {
     const { t } = useTranslation("util");
-    const classes = useStyles();
+
 
     const ErrorHandlerComponent = errorHandler || ErrorHandler;
 
     return (
-        <Dialog open={open} onClose={handleClose} scroll="body">
+        <StyledDialog open={open} onClose={handleClose} scroll="body">
             <DialogTitle>
                 <IconButton
                     aria-label={t("close")}
@@ -53,7 +63,7 @@ const DEErrorDialog = ({
                     baseId={baseId}
                 />
             </DialogContent>
-        </Dialog>
+        </StyledDialog>
     );
 };
 

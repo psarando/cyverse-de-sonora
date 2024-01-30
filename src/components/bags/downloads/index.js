@@ -1,5 +1,7 @@
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import {
     Button,
     Dialog,
@@ -12,8 +14,6 @@ import {
     Typography,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { Cancel as CancelIcon, Close } from "@mui/icons-material";
 
 import buildID from "components/utils/DebugIDUtil";
@@ -23,20 +23,34 @@ import { useTranslation } from "i18n";
 import { getHost } from "components/utils/getHost";
 import constants from "components/bags/constants";
 
-const useStyles = makeStyles((theme) => ({
-    closeButton: {
+const PREFIX = 'DownloadLinksDialog';
+
+const classes = {
+    closeButton: `${PREFIX}-closeButton`,
+    help: `${PREFIX}-help`,
+    paper: `${PREFIX}-paper`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.closeButton}`]: {
         position: "absolute",
         right: theme.spacing(1),
         top: theme.spacing(1),
     },
-    help: {
+
+    [`& .${classes.help}`]: {
         paddingTop: theme.spacing(2),
         paddingBottom: theme.spacing(1),
     },
-    paper: {
+
+    [`& .${classes.paper}`]: {
         width: theme.spacing(60),
         height: theme.spacing(70),
-    },
+    }
 }));
 
 const DownloadLinksDialog = ({
@@ -45,7 +59,7 @@ const DownloadLinksDialog = ({
     fullScreen = false,
     onClose = () => {},
 }) => {
-    const classes = useStyles();
+
     const { t } = useTranslation(["bags", "common"]);
     const dialogID = buildID(constants.DOWNLOAD_BASEID, constants.DIALOG);
 
@@ -57,7 +71,7 @@ const DownloadLinksDialog = ({
     };
 
     return (
-        <Dialog
+        <StyledDialog
             fullScreen={fullScreen}
             open={open}
             onClose={handleClose}
@@ -144,7 +158,7 @@ const DownloadLinksDialog = ({
                     </Button>
                 )}
             </DialogActions>
-        </Dialog>
+        </StyledDialog>
     );
 };
 

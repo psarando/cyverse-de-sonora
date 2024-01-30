@@ -5,25 +5,35 @@
  *
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import buildID from "components/utils/DebugIDUtil";
 
 import ids from "./ids";
 
 import { Grid, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
-const useStyles = makeStyles((theme) => ({
-    panelHeader: {
+const PREFIX = 'SplitView';
+
+const classes = {
+    panelHeader: `${PREFIX}-panelHeader`
+};
+
+const StyledGrid = styled(Grid)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.panelHeader}`]: {
         color: theme.palette.info.main,
         padding: 0,
         margin: 0,
-    },
+    }
 }));
 
 const LEFT_PANEL = "leftPanel";
@@ -34,7 +44,7 @@ export default function SplitView(props) {
     const { baseId, leftPanel, rightPanel, leftPanelTitle, rightPanelTitle } =
         props;
     const { t } = useTranslation("data");
-    const classes = useStyles();
+
     const [hidden, setHidden] = React.useState(NONE);
     const [leftWidth, setLeftWidth] = React.useState(5);
     const [rightWidth, setRightWidth] = React.useState(5);
@@ -62,7 +72,7 @@ export default function SplitView(props) {
         }
     };
     return (
-        <Grid
+        <StyledGrid
             container
             direction="row"
             justifyContent="space-between"
@@ -121,6 +131,6 @@ export default function SplitView(props) {
                 </Typography>
                 {rightPanel}
             </Grid>
-        </Grid>
+        </StyledGrid>
     );
 }

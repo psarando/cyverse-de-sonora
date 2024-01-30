@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -19,29 +20,42 @@ import FormSwitch from "components/forms/FormSwitch";
 import buildID from "components/utils/DebugIDUtil";
 
 import { Button, Grid, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { Field, Form, Formik } from "formik";
 
-const styles = (theme) => ({
-    grid: {
+const PREFIX = 'Edit';
+
+const classes = {
+    grid: `${PREFIX}-grid`,
+    sectionHeader: `${PREFIX}-sectionHeader`,
+    actionButton: `${PREFIX}-actionButton`,
+    textField: `${PREFIX}-textField`
+};
+
+const StyledFormik = styled(Formik)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.grid}`]: {
         margin: theme.spacing(1),
         [theme.breakpoints.down("md")]: {
             margin: theme.spacing(0.1),
         },
     },
-    sectionHeader: {
+
+    [`& .${classes.sectionHeader}`]: {
         color: theme.palette.info.main,
         marginLeft: theme.spacing(1),
     },
-    actionButton: {
+
+    [`& .${classes.actionButton}`]: {
         margin: theme.spacing(1),
     },
-    textField: {
-        marginTop: 0,
-    },
-});
 
-const useStyles = makeStyles(styles);
+    [`& .${classes.textField}`]: {
+        marginTop: 0,
+    }
+}));
 
 function Edit(props) {
     const {
@@ -51,7 +65,7 @@ function Edit(props) {
         createRefGenome,
         saveRefGenome,
     } = props;
-    const classes = useStyles();
+
     const { t } = useTranslation("referenceGenomes");
 
     const handleSubmit = (values) => {
@@ -63,7 +77,7 @@ function Edit(props) {
     };
 
     return (
-        <Formik initialValues={referenceGenome} onSubmit={handleSubmit}>
+        <StyledFormik initialValues={referenceGenome} onSubmit={handleSubmit}>
             {(props) => (
                 <Form>
                     <Typography variant="h6" className={classes.sectionHeader}>
@@ -176,7 +190,7 @@ function Edit(props) {
                     </Grid>
                 </Form>
             )}
-        </Formik>
+        </StyledFormik>
     );
 }
 

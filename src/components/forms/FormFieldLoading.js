@@ -8,20 +8,30 @@
  */
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import buildDebugId from "../utils/DebugIDUtil";
 import ids from "../utils/ids";
 
 import getFormError from "./getFormError";
 
 import { FormControl, InputLabel, FormHelperText } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { Skeleton } from "@mui/material";
 
-// Set the skeleton's height to about the same height as text or select fields.
-const useStyles = makeStyles((theme) => ({
-    skeleton: {
+const PREFIX = 'FormFieldLoading';
+
+const classes = {
+    skeleton: `${PREFIX}-skeleton`
+};
+
+const StyledFormControl = styled(FormControl)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.skeleton}`]: {
         height: theme.spacing(6),
-    },
+    }
 }));
 
 const FormFieldLoading = ({
@@ -33,13 +43,13 @@ const FormFieldLoading = ({
     form: { touched, errors },
     ...props
 }) => {
-    const classes = useStyles();
+
     const errorMsg = getFormError(name, touched, errors);
     const loadingFieldID = buildDebugId(id, ids.LOADING_SKELETON);
     const helperTextID = buildDebugId(loadingFieldID, ids.HELPER_TEXT);
 
     return (
-        <FormControl variant="standard" fullWidth error={!!errorMsg}>
+        <StyledFormControl variant="standard" fullWidth error={!!errorMsg}>
             <InputLabel htmlFor={loadingFieldID} required={required}>
                 {label}
             </InputLabel>
@@ -53,7 +63,7 @@ const FormFieldLoading = ({
             <FormHelperText id={helperTextID}>
                 {errorMsg || helperText}
             </FormHelperText>
-        </FormControl>
+        </StyledFormControl>
     );
 };
 

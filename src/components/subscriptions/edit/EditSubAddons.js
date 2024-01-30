@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useMutation, useQueryClient } from "react-query";
 
 import {
@@ -17,7 +18,6 @@ import {
     TableCell,
     Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import AddIcon from "@mui/icons-material/Add";
 import { Remove } from "@mui/icons-material";
 
@@ -38,6 +38,29 @@ import {
 import { announce } from "components/announcer/CyVerseAnnouncer";
 import { nonZeroValue } from "components/utils/validations";
 
+const PREFIX = 'EditSubAddonsDialog';
+
+const classes = {
+    tableCell: `${PREFIX}-tableCell`,
+    table: `${PREFIX}-table`,
+    alignRight: `${PREFIX}-alignRight`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(() => ({
+    [`& .${classes.tableCell}`]: {
+        padding: "0px 16px 0px 16px",
+    },
+
+    [`& .${classes.table}`]: {
+        margin: "10px 0px 10px 0px",
+    },
+
+    [`& .${classes.alignRight}`]: {
+        textAlign: "right",
+    }
+}));
+
 const TABLE_COLUMNS = [
     { name: "", numeric: false, enableSorting: false },
     { name: "Name", numeric: false, enableSorting: false },
@@ -45,18 +68,6 @@ const TABLE_COLUMNS = [
     { name: "Type", numeric: false, enableSorting: false },
     { name: "Paid", numeric: false, enableSorting: false },
 ];
-
-const useStyles = makeStyles(() => ({
-    tableCell: {
-        padding: "0px 16px 0px 16px",
-    },
-    table: {
-        margin: "10px 0px 10px 0px",
-    },
-    alignRight: {
-        textAlign: "right",
-    },
-}));
 
 function LoadingMask(props) {
     const { columns, tableId } = props;
@@ -125,7 +136,7 @@ function EditSubAddonsDialog(props) {
                         fullWidth={true}
                         title={t("editAddons")}
                         actions={
-                            <>
+                            <Root>
                                 {selectedSubscriptionAddons &&
                                     selectedSubscriptionAddons.length > 0 && (
                                         <>
@@ -161,7 +172,7 @@ function EditSubAddonsDialog(props) {
                                             )}
                                         </>
                                     )}
-                            </>
+                            </Root>
                         }
                     >
                         <Button
@@ -207,7 +218,7 @@ function EditSubAddonsForm(props) {
     } = props;
 
     const { t } = useTranslation("subscriptions");
-    const classes = useStyles();
+
     return (
         <>
             <Table className={classes.table}>
@@ -254,7 +265,7 @@ function FormBody(props) {
     const { t } = useTranslation("subscriptions");
     const { t: i18nUtil } = useTranslation("util");
     const tableId = buildID(parentId, ids.SUB_ADDONS.EDIT_ADDONS_TABLE);
-    const classes = useStyles();
+
     return (
         <>
             {isFetchingSubAddons ? (

@@ -4,6 +4,7 @@
  **/
 
 import React, { Component } from "react";
+import { styled } from '@mui/material/styles';
 import PropTypes from "prop-types";
 import numeral from "numeral";
 import Rating from "@mui/material/Rating";
@@ -11,30 +12,43 @@ import Rating from "@mui/material/Rating";
 import IconButton from "@mui/material/IconButton";
 import { Tooltip, Typography } from "@mui/material";
 
-import withStyles from "@mui/styles/withStyles";
-
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const style1 = (theme) => ({
-    rating: {
+const PREFIX = 'Rate';
+
+const classes = {
+    rating: `${PREFIX}-rating`,
+    total: `${PREFIX}-total`,
+    delete: `${PREFIX}-delete`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.rating}`]: {
         float: "left",
         marginTop: theme.spacing(0.15),
     },
-    total: {
+
+    [`& .${classes.total}`]: {
         marginTop: theme.spacing(0.05),
     },
-    delete: {
+
+    [`& .${classes.delete}`]: {
         marginTop: theme.spacing(0.15),
-    },
-});
+    }
+}));
 
 class Rate extends Component {
     render() {
-        const { name, value, readOnly, total, onChange, onDelete, classes } =
+        const { name, value, readOnly, total, onChange, onDelete, } =
             this.props;
         const totalString = numeral(total).format("0a");
         return (
-            <React.Fragment>
+            <Root>
                 <div className={classes.rating}>
                     <Rating
                         name={name}
@@ -67,7 +81,7 @@ class Rate extends Component {
                         </span>
                     )}
                 </div>
-            </React.Fragment>
+            </Root>
         );
     }
 }
@@ -86,4 +100,4 @@ Rate.propTypes = {
     onChange: PropTypes.func,
 };
 
-export default withStyles(style1)(Rate);
+export default (Rate);

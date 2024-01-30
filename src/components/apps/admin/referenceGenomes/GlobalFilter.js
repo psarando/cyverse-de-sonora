@@ -6,6 +6,8 @@
  */
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -13,11 +15,23 @@ import ids from "./ids";
 import buildID from "components/utils/DebugIDUtil";
 
 import InputBase from "@mui/material/InputBase";
-import makeStyles from "@mui/styles/makeStyles";
 import SearchIcon from "@mui/icons-material/Search";
 
-const useStyles = makeStyles((theme) => ({
-    search: {
+const PREFIX = 'GlobalFilter';
+
+const classes = {
+    search: `${PREFIX}-search`,
+    searchIcon: `${PREFIX}-searchIcon`,
+    inputRoot: `${PREFIX}-inputRoot`,
+    inputInput: `${PREFIX}-inputInput`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.search}`]: {
         position: "relative",
         borderRadius: theme.shape.borderRadius,
         marginRight: theme.spacing(2),
@@ -27,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
             width: "auto",
         },
     },
-    searchIcon: {
+
+    [`& .${classes.searchIcon}`]: {
         width: theme.spacing(7),
         height: "100%",
         position: "absolute",
@@ -36,17 +51,19 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: "center",
     },
-    inputRoot: {
+
+    [`& .${classes.inputRoot}`]: {
         color: "inherit",
     },
-    inputInput: {
+
+    [`& .${classes.inputInput}`]: {
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create("width"),
         width: "100%",
         [theme.breakpoints.up("md")]: {
             width: 200,
         },
-    },
+    }
 }));
 
 const GlobalFilter = ({
@@ -55,7 +72,7 @@ const GlobalFilter = ({
     globalFilter,
     setGlobalFilter,
 }) => {
-    const classes = useStyles();
+
     const { t } = useTranslation("referenceGenomes");
     const count = preGlobalFilteredRows.length;
 
@@ -64,7 +81,7 @@ const GlobalFilter = ({
     // only the current page is downloaded.
 
     return (
-        <div className={classes.search}>
+        <Root className={classes.search}>
             <div className={classes.searchIcon}>
                 <SearchIcon />
             </div>
@@ -81,7 +98,7 @@ const GlobalFilter = ({
                 }}
                 inputProps={{ "aria-label": t("search") }}
             />
-        </div>
+        </Root>
     );
 };
 

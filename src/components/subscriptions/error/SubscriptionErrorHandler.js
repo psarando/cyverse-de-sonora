@@ -4,6 +4,7 @@
  * A component that displays formatted error message with options to contact support
  */
 import React, { useEffect } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import GridLabelValue from "../../utils/GridLabelValue";
@@ -22,29 +23,40 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import ErrorIcon from "@mui/icons-material/Error";
 import { trackIntercomEvent, IntercomEvents } from "common/intercom";
 
-const useStyles = makeStyles((theme) => ({
-    cardContent: {
+const PREFIX = 'SubscriptionErrorHandler';
+
+const classes = {
+    cardContent: `${PREFIX}-cardContent`,
+    container: `${PREFIX}-container`
+};
+
+const StyledCard = styled(Card)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.cardContent}`]: {
         padding: theme.spacing(2),
         [theme.breakpoints.down("sm")]: {
             padding: theme.spacing(1),
         },
     },
-    container: {
+
+    [`& .${classes.container}`]: {
         margin: theme.spacing(1),
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0),
         },
-    },
+    }
 }));
 
 function SubscriptionErrorHandler(props) {
     const { errorObject, baseId } = props;
     const { t } = useTranslation("subscriptions");
-    const classes = useStyles();
+
     const errBaseId = buildID(baseId, ids.ERROR_HANDLER);
 
     useEffect(() => {
@@ -86,7 +98,7 @@ function SubscriptionErrorHandler(props) {
     );
 
     return (
-        <Card id={errBaseId}>
+        <StyledCard id={errBaseId}>
             <CardHeader avatar={avatar} title={title} />
             <Divider orientation="horizontal" />
             <CardContent className={classes.cardContent}>
@@ -96,7 +108,7 @@ function SubscriptionErrorHandler(props) {
             <CardActions>
                 <ContactSupport baseId={errBaseId} />
             </CardActions>
-        </Card>
+        </StyledCard>
     );
 }
 

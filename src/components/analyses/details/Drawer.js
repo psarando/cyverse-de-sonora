@@ -7,6 +7,8 @@
 
 import React, { useState } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useTranslation } from "i18n";
 
 import DetailsPanel from "./DetailsPanel";
@@ -24,16 +26,19 @@ import buildID from "components/utils/DebugIDUtil";
 
 import { Drawer, Typography } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
+const PREFIX = 'DetailsDrawer';
 
-const TABS = {
-    analysisInfo: "ANALYSIS INFORMATION",
-    analysisHistory: "ANALYSIS STATUS HISTORY",
-    analysisParams: "ANALYSIS PARAMETERS",
+const classes = {
+    drawerPaper: `${PREFIX}-drawerPaper`,
+    drawerHeader: `${PREFIX}-drawerHeader`
 };
 
-const useStyles = makeStyles((theme) => ({
-    drawerPaper: {
+const StyledDrawer = styled(Drawer)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.drawerPaper}`]: {
         [theme.breakpoints.up("xl")]: {
             maxWidth: "25%",
         },
@@ -45,14 +50,20 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 
-    drawerHeader: {
+    [`& .${classes.drawerHeader}`]: {
         margin: theme.spacing(1),
         overflowWrap: "break-word",
-    },
+    }
 }));
 
+const TABS = {
+    analysisInfo: "ANALYSIS INFORMATION",
+    analysisHistory: "ANALYSIS STATUS HISTORY",
+    analysisParams: "ANALYSIS PARAMETERS",
+};
+
 function DetailsDrawer(props) {
-    const classes = useStyles();
+
     const { t } = useTranslation("analyses");
     const { selectedAnalysis, open, onClose, baseId } = props;
     const [selectedTab, setSelectedTab] = useState(TABS.analysisInfo);
@@ -89,7 +100,7 @@ function DetailsDrawer(props) {
     const paramsTabId = buildID(drawerId, ids.PARAMS_TAB);
 
     return (
-        <Drawer
+        <StyledDrawer
             onClose={onClose}
             open={open}
             anchor="right"
@@ -153,7 +164,7 @@ function DetailsDrawer(props) {
                     baseId={paramsTabId}
                 />
             </DETabPanel>
-        </Drawer>
+        </StyledDrawer>
     );
 }
 

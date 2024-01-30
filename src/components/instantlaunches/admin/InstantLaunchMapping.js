@@ -1,5 +1,7 @@
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useQueryClient, useMutation, useQuery } from "react-query";
 
 import withErrorAnnouncer from "components/error/withErrorAnnouncer";
@@ -40,26 +42,42 @@ import {
     IconButton,
 } from "@mui/material";
 
-import makeStyles from "@mui/styles/makeStyles";
-
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import { useTranslation } from "i18n";
 import { useFormik } from "formik";
 
-const useStyles = makeStyles((theme) => ({
-    title: {
+const PREFIX = 'InstantLaunchMapping';
+
+const classes = {
+    title: `${PREFIX}-title`,
+    text: `${PREFIX}-text`,
+    sectionTitle: `${PREFIX}-sectionTitle`,
+    flexContainer: `${PREFIX}-flexContainer`,
+    flexItem: `${PREFIX}-flexItem`,
+    submitButton: `${PREFIX}-submitButton`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.title}`]: {
         paddingTop: theme.spacing(2),
     },
-    text: {
+
+    [`& .${classes.text}`]: {
         marginLeft: theme.spacing(2),
         marginBottom: theme.spacing(2),
     },
-    sectionTitle: {
+
+    [`& .${classes.sectionTitle}`]: {
         marginTop: theme.spacing(5),
         marginBottom: theme.spacing(2),
     },
-    flexContainer: {
+
+    [`& .${classes.flexContainer}`]: {
         marginTop: 0,
         marginLeft: theme.spacing(1),
         marginBottom: theme.spacing(4),
@@ -72,15 +90,17 @@ const useStyles = makeStyles((theme) => ({
             minWidth: "25ch",
         },
     },
-    flexItem: {
+
+    [`& .${classes.flexItem}`]: {
         marginTop: 0,
         marginBottom: 0,
         marginRight: theme.spacing(2),
         marginLeft: theme.spacing(2),
     },
-    submitButton: {
+
+    [`& .${classes.submitButton}`]: {
         height: theme.spacing(5),
-    },
+    }
 }));
 
 const initialValues = {
@@ -92,7 +112,7 @@ const initialValues = {
 
 const AddMappingForm = ({ t, handleSubmit, instantlaunches, infoTypes }) => {
     const baseID = buildID(ids.BASE, ids.MAPPING, ids.ADD, ids.FORM);
-    const classes = useStyles();
+
 
     const formik = useFormik({
         initialValues,
@@ -238,7 +258,7 @@ const AddMappingForm = ({ t, handleSubmit, instantlaunches, infoTypes }) => {
 const InstantLaunchMappingEditor = ({ showErrorAnnouncer }) => {
     const baseID = buildID(ids.BASE, ids.MAPPING, ids.EDITOR);
 
-    const classes = useStyles();
+
 
     const { t } = useTranslation(["instantlaunches", "common"]);
 
@@ -345,7 +365,7 @@ const InstantLaunchMappingEditor = ({ showErrorAnnouncer }) => {
         infoTypes.isError;
 
     return (
-        <div>
+        <Root>
             {isLoading ? (
                 <Skeleton
                     variant="rectangular"
@@ -494,7 +514,7 @@ const InstantLaunchMappingEditor = ({ showErrorAnnouncer }) => {
                     </TableContainer>
                 </Paper>
             )}
-        </div>
+        </Root>
     );
 };
 

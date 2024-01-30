@@ -4,6 +4,7 @@
  *
  */
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { Field, Form, Formik } from "formik";
 import { useTranslation } from "i18n";
 
@@ -25,13 +26,22 @@ import {
     IconButton,
     Tooltip,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { Close } from "@mui/icons-material";
 
-const useStyles = makeStyles((theme) => ({
-    closeButton: {
+const PREFIX = 'CreateSavedLaunchDialog';
+
+const classes = {
+    closeButton: `${PREFIX}-closeButton`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.closeButton}`]: {
         float: "right",
-    },
+    }
 }));
 
 function CreateSavedLaunchDialog(props) {
@@ -40,7 +50,7 @@ function CreateSavedLaunchDialog(props) {
     const { t } = useTranslation("apps");
     const [saveError, setSaveError] = React.useState(null);
 
-    const classes = useStyles();
+
 
     const handleSubmit = (values, actions) => {
         actions.setSubmitting(true);
@@ -67,7 +77,7 @@ function CreateSavedLaunchDialog(props) {
     };
 
     return (
-        <Dialog open={dialogOpen}>
+        <StyledDialog open={dialogOpen}>
             <DialogTitle>
                 {appName}
                 <IconButton
@@ -147,7 +157,7 @@ function CreateSavedLaunchDialog(props) {
                     </Form>
                 )}
             </Formik>
-        </Dialog>
+        </StyledDialog>
     );
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useMutation } from "react-query";
 
 import { useTranslation } from "i18n";
@@ -17,7 +18,6 @@ import { trackIntercomEvent, IntercomEvents } from "common/intercom";
 
 import buildID from "components/utils/DebugIDUtil";
 
-import makeStyles from "@mui/styles/makeStyles";
 import {
     CheckCircle,
     Publish as PublishIcon,
@@ -38,14 +38,33 @@ import {
     Typography,
 } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'URLImportDialog';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    close: `${PREFIX}-close`,
+    container: `${PREFIX}-container`,
+    urlField: `${PREFIX}-urlField`,
+    closeDialog: `${PREFIX}-closeDialog`,
+    importDefault: `${PREFIX}-importDefault`,
+    importError: `${PREFIX}-importError`,
+    instructions: `${PREFIX}-instructions`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
         flexGrow: 1,
     },
-    close: {
+
+    [`& .${classes.close}`]: {
         color: theme.palette.blueGrey,
     },
-    container: {
+
+    [`& .${classes.container}`]: {
         display: "flex",
         alignItems: "center", // without this the import button balloons in size vertically.
 
@@ -55,7 +74,8 @@ const useStyles = makeStyles((theme) => ({
             flexDirection: "column",
         },
     },
-    urlField: {
+
+    [`& .${classes.urlField}`]: {
         width: "100%",
         margin: theme.spacing(0, 2, 0, 0),
 
@@ -63,13 +83,15 @@ const useStyles = makeStyles((theme) => ({
             margin: 0, // The textbox shifts to the left without this.
         },
     },
-    closeDialog: {
+
+    [`& .${classes.closeDialog}`]: {
         position: "absolute",
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.blueGrey,
     },
-    importDefault: {
+
+    [`& .${classes.importDefault}`]: {
         background: theme.palette.primary.main,
 
         [theme.breakpoints.down("md")]: {
@@ -78,7 +100,8 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: theme.spacing(0),
         },
     },
-    importError: {
+
+    [`& .${classes.importError}`]: {
         background: theme.palette.error.main,
 
         // Hover colors get weird after switching to error
@@ -93,9 +116,10 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: theme.spacing(0),
         },
     },
-    instructions: {
+
+    [`& .${classes.instructions}`]: {
         marginBottom: theme.spacing(2),
-    },
+    }
 }));
 
 const validURL = (possibleURL) => {
@@ -122,7 +146,7 @@ const urlFileName = (urlString) =>
     urlString.split("/").pop().split("#")[0].split("?")[0];
 
 const URLImportTextField = (props) => {
-    const classes = useStyles();
+
     const { t } = useTranslation("urlImport");
 
     const [uploadURL, setUploadURL] = useState("");
@@ -227,7 +251,7 @@ const URLImportTextField = (props) => {
 };
 
 const URLImportDialog = (props) => {
-    const classes = useStyles();
+
     const { t } = useTranslation("urlImport");
     const theme = useTheme();
     const { open, onClose, path } = props;
@@ -236,7 +260,7 @@ const URLImportDialog = (props) => {
     const [errorMsg, setErrorMsg] = useState();
 
     return (
-        <Dialog
+        <StyledDialog
             fullWidth={true}
             maxWidth="sm"
             open={open}
@@ -306,7 +330,7 @@ const URLImportDialog = (props) => {
                     {t("doneButtonText")}
                 </Button>
             </DialogActions>
-        </Dialog>
+        </StyledDialog>
     );
 };
 

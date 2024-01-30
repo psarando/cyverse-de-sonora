@@ -5,6 +5,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import { useQueryClient } from "react-query";
 import Link from "next/link";
@@ -52,7 +53,6 @@ import {
     useTheme,
 } from "@mui/material";
 import { Autocomplete } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import {
     Apps as AppsIcon,
     Description as DescriptionIcon,
@@ -65,8 +65,25 @@ import { getTeamLinkRefs } from "../teams/util";
 import { trackIntercomEvent } from "common/intercom";
 import { useConfig } from "contexts/config";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'GlobalSearchField';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    paper: `${PREFIX}-paper`,
+    option: `${PREFIX}-option`,
+    searchFilter: `${PREFIX}-searchFilter`,
+    input: `${PREFIX}-input`,
+    optionIcon: `${PREFIX}-optionIcon`,
+    optionDiv: `${PREFIX}-optionDiv`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
         position: "relative",
         marginRight: 0,
         marginLeft: 0,
@@ -79,16 +96,19 @@ const useStyles = makeStyles((theme) => ({
             width: "95%",
         },
     },
-    paper: {
+
+    [`& .${classes.paper}`]: {
         boxShadow: "none",
         margin: 0,
     },
-    option: {
+
+    [`& .${classes.option}`]: {
         minHeight: "auto",
         padding: theme.spacing(0),
         margin: theme.spacing(0),
     },
-    searchFilter: {
+
+    [`& .${classes.searchFilter}`]: {
         marginRight: theme.spacing(4),
         height: theme.spacing(3.6),
         borderRadius: 0,
@@ -103,7 +123,8 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: theme.palette.info.contrastText,
         },
     },
-    input: {
+
+    [`& .${classes.input}`]: {
         position: "relative",
         height: theme.spacing(3.6),
         borderRadius: 0,
@@ -116,15 +137,17 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: theme.palette.info.contrastText,
         },
     },
-    optionIcon: {
+
+    [`& .${classes.optionIcon}`]: {
         marginRight: theme.spacing(0.5),
         color: theme.palette.info.main,
         fontSize: "1.5rem",
     },
-    optionDiv: {
+
+    [`& .${classes.optionDiv}`]: {
         flexGrow: 1,
         margin: theme.spacing(1),
-    },
+    }
 }));
 
 const getViewAllPrompt = (id, searchTerm, i18NSearch) => {
@@ -156,11 +179,11 @@ const SearchOption = (props) => {
         href,
         as,
     } = props;
-    const classes = useStyles();
+
     const theme = useTheme();
 
     const OptionLink = React.forwardRef(({ onClick, href }, ref) => (
-        <>
+        (<Root>
             <span className={classes.optionIcon}>{icon}</span>
             <MuiLink
                 href={href}
@@ -195,7 +218,7 @@ const SearchOption = (props) => {
                     </Typography>
                 </div>
             </MuiLink>
-        </>
+        </Root>)
     ));
 
     return onOptionSelected ? (
@@ -318,7 +341,7 @@ function TeamSearchOption(props) {
 }
 
 function GlobalSearchField(props) {
-    const classes = useStyles();
+
     const [userProfile] = useUserProfile();
     const {
         search,

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useQueryClient, useMutation, useQuery } from "react-query";
 
 import {
@@ -41,7 +43,6 @@ import SavedLaunchList from "./SavedLaunchList";
 import constants from "constants.js";
 
 import { Button, Grid, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import {
     Add as AddIcon,
     Close as CloseIcon,
@@ -49,6 +50,53 @@ import {
     LabelImportant as NestedIcon,
     MenuOutlined,
 } from "@mui/icons-material";
+
+const PREFIX = 'InstantLaunchList';
+
+const classes = {
+    addButton: `${PREFIX}-addButton`,
+    closeButton: `${PREFIX}-closeButton`,
+    creationDescription: `${PREFIX}-creationDescription`,
+    table: `${PREFIX}-table`,
+    tableDescription: `${PREFIX}-tableDescription`,
+    tableTitle: `${PREFIX}-tableTitle`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.addButton}`]: {
+        marginRight: theme.spacing(2),
+        float: "right",
+    },
+
+    [`& .${classes.closeButton}`]: {
+        marginTop: theme.spacing(2),
+    },
+
+    [`& .${classes.creationDescription}`]: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
+
+    [`& .${classes.table}`]: {
+        minWidth: "100%",
+    },
+
+    [`& .${classes.tableDescription}`]: {
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+    },
+
+    [`& .${classes.tableTitle}`]: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        marginLeft: theme.spacing(2),
+    }
+}));
 
 /**
  * Checks if the instant launch associated with 'id' is in
@@ -87,38 +135,11 @@ const isInListing = (id, listingILs) => {
     return listingILs.find((il) => il.id === id);
 };
 
-const useStyles = makeStyles((theme) => ({
-    addButton: {
-        marginRight: theme.spacing(2),
-        float: "right",
-    },
-    closeButton: {
-        marginTop: theme.spacing(2),
-    },
-    creationDescription: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-    },
-    table: {
-        minWidth: "100%",
-    },
-    tableDescription: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
-    },
-    tableTitle: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        marginLeft: theme.spacing(2),
-    },
-}));
-
 const CreationDialog = ({ t, open, onClose }) => {
     const createID = buildID(ids.BASE, ids.CREATE, ids.DIALOG);
     const closeID = buildID(createID, ids.CLOSE, ids.BUTTON);
 
-    const classes = useStyles();
+
 
     return (
         <DEDialog
@@ -162,7 +183,7 @@ const InstantLaunchList = ({ showErrorAnnouncer }) => {
     const baseID = buildID(ids.BASE, ids.LIST);
 
     const { t } = useTranslation("instantlaunches");
-    const classes = useStyles();
+
 
     const [dlgOpen, setDlgOpen] = React.useState(false);
 
@@ -508,7 +529,7 @@ const InstantLaunchList = ({ showErrorAnnouncer }) => {
         listingILs.isError;
 
     return (
-        <div style={{ width: "100%" }}>
+        <Root style={{ width: "100%" }}>
             {isError ? (
                 <WrappedErrorHandler
                     errorObject={
@@ -569,7 +590,7 @@ const InstantLaunchList = ({ showErrorAnnouncer }) => {
                     />
                 </>
             )}
-        </div>
+        </Root>
     );
 };
 

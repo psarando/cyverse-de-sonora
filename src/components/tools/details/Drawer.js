@@ -7,6 +7,8 @@
 
 import React, { useState } from "react";
 
+import { styled } from '@mui/material/styles';
+
 import { useQuery } from "react-query";
 import { useTranslation } from "i18n";
 
@@ -26,15 +28,21 @@ import {
 } from "serviceFacades/tools";
 
 import { Drawer, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+const PREFIX = 'DetailsDrawer';
 
-const TABS = {
-    toolDetails: "TOOL DETAILS",
-    appsUsingTool: "APPS USING TOOL",
+const classes = {
+    drawerPaper: `${PREFIX}-drawerPaper`,
+    drawerHeader: `${PREFIX}-drawerHeader`,
+    drawerSubHeader: `${PREFIX}-drawerSubHeader`,
+    headerOperations: `${PREFIX}-headerOperations`
 };
 
-const useStyles = makeStyles((theme) => ({
-    drawerPaper: {
+const StyledDrawer = styled(Drawer)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.drawerPaper}`]: {
         [theme.breakpoints.up("xl")]: {
             maxWidth: "25%",
         },
@@ -46,26 +54,32 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 
-    drawerHeader: {
+    [`& .${classes.drawerHeader}`]: {
         margin: theme.spacing(1),
         display: "flex",
         flexDirection: "row",
         maxWidth: "100%",
     },
-    drawerSubHeader: {
+
+    [`& .${classes.drawerSubHeader}`]: {
         marginLeft: theme.spacing(2),
         display: "flex",
         flexDirection: "row",
         maxWidth: "100%",
     },
 
-    headerOperations: {
+    [`& .${classes.headerOperations}`]: {
         marginLeft: theme.spacing(1),
-    },
+    }
 }));
 
+const TABS = {
+    toolDetails: "TOOL DETAILS",
+    appsUsingTool: "APPS USING TOOL",
+};
+
 function DetailsDrawer(props) {
-    const classes = useStyles();
+
     const { t } = useTranslation("tools");
     const { selectedTool, open, onClose, baseId } = props;
     const [selectedTab, setSelectedTab] = useState(TABS.toolDetails);
@@ -101,7 +115,7 @@ function DetailsDrawer(props) {
     const toolName = selectedTool.name;
 
     return (
-        <Drawer
+        <StyledDrawer
             onClose={onClose}
             open={open}
             anchor="right"
@@ -159,7 +173,7 @@ function DetailsDrawer(props) {
                     orderBy="name"
                 />
             </DETabPanel>
-        </Drawer>
+        </StyledDrawer>
     );
 }
 

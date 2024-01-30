@@ -6,6 +6,7 @@
  */
 
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -13,24 +14,55 @@ import GlobalFilter from "./GlobalFilter";
 
 import buildID from "components/utils/DebugIDUtil";
 
-import makeStyles from "@mui/styles/makeStyles";
 import Toolbar from "@mui/material/Toolbar";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-const useToolbarStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'TableToolbar';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    toolbarItems: `${PREFIX}-toolbarItems`
+};
+
+const StyledToolbar = styled(Toolbar)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(1),
     },
-    toolbarItems: {
+
+    [`& .${classes.toolbarItems}`]: {
         [theme.breakpoints.down("sm")]: {
             margin: theme.spacing(0.5),
         },
         [theme.breakpoints.up("sm")]: {
             margin: theme.spacing(1),
         },
+    }
+}));
+
+const useToolbarStyles = makeStyles((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1),
     },
+
+    [`& .${classes.toolbarItems}`]: {
+        [theme.breakpoints.down("sm")]: {
+            margin: theme.spacing(0.5),
+        },
+        [theme.breakpoints.up("sm")]: {
+            margin: theme.spacing(1),
+        },
+    }
 }));
 
 const TableToolbar = (props) => {
@@ -45,7 +77,7 @@ const TableToolbar = (props) => {
     } = props;
     const toolbarId = buildID(baseId, ids.TOOLBAR);
     return (
-        <Toolbar className={classes.root}>
+        <StyledToolbar className={classes.root}>
             <Button
                 id={buildID(toolbarId, ids.ADD_BUTTON)}
                 variant="outlined"
@@ -61,7 +93,7 @@ const TableToolbar = (props) => {
                 globalFilter={globalFilter}
                 setGlobalFilter={setGlobalFilter}
             />
-        </Toolbar>
+        </StyledToolbar>
     );
 };
 export default TableToolbar;

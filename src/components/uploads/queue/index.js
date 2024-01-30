@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import { styled } from '@mui/material/styles';
 import { useTranslation } from "i18n";
 import {
     Avatar,
@@ -20,8 +21,6 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-
-import makeStyles from "@mui/styles/makeStyles";
 
 import {
     Cancel as CancelIcon,
@@ -42,17 +41,28 @@ import buildID from "components/utils/DebugIDUtil";
 import ids from "../dialog/ids";
 import { ERROR_CODES, getErrorCode } from "components/error/errorCode";
 
-const useStyles = makeStyles((theme) => ({
-    ellipsis: {
+const PREFIX = 'UploadList';
+
+const classes = {
+    ellipsis: `${PREFIX}-ellipsis`,
+    error: `${PREFIX}-error`
+};
+
+const StyledList = styled(List)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.ellipsis}`]: {
         overflow: "hidden",
         textOverflow: "ellipsis",
         paddingRight: theme.spacing(1),
     },
 
-    error: {
+    [`& .${classes.error}`]: {
         color: theme.palette.error.main,
         wordBreak: "break-word",
-    },
+    }
 }));
 
 /**
@@ -96,7 +106,7 @@ const UploadStatus = ({ upload, baseId }) => {
 };
 
 const EllipsisField = ({ children }) => {
-    const classes = useStyles();
+
 
     return <div className={classes.ellipsis}>{children}</div>;
 };
@@ -132,7 +142,7 @@ function UploadSecondaryText(props) {
  */
 const UploadItem = ({ upload, handleCancel, baseId }) => {
     const theme = useTheme();
-    const classes = useStyles();
+
     const { t } = useTranslation("upload");
     const isSmall = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -204,7 +214,7 @@ const UploadList = (props) => {
     };
 
     return (
-        <List dense={true} id={id}>
+        <StyledList dense={true} id={id}>
             {tracker.uploads.map((upload) => (
                 <UploadItem
                     baseId={id}
@@ -213,7 +223,7 @@ const UploadList = (props) => {
                     handleCancel={handleCancel}
                 />
             ))}
-        </List>
+        </StyledList>
     );
 };
 
