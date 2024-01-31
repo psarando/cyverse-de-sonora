@@ -5,7 +5,7 @@
  *
  */
 import React from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "i18n";
 import Link from "next/link";
 
@@ -43,24 +43,18 @@ import {
 
 import styles from "components/utils/runningAnimation";
 
-const PREFIX = 'TableView';
+const PREFIX = "TableView";
 
 const classes = {
-    name: `${PREFIX}-name`
+    name: `${PREFIX}-name`,
 };
 
-const StyledTableContainer = styled(TableContainer)((
-    {
-        theme
-    }
-) => ({
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     [`& .${classes.name}`]: {
         maxWidth: "12rem",
         overflowWrap: "break-word",
-    }
+    },
 }));
-
-const useRunningAnalysesStyles = makeStyles(styles);
 
 function AnalysisName(props) {
     const analysis = props.analysis;
@@ -188,8 +182,8 @@ function TableView(props) {
     } = props;
 
     const theme = useTheme();
+    const running = styles(theme);
 
-    const running = useRunningAnalysesStyles();
     const { t } = useTranslation("analyses");
 
     const isSmall = useMediaQuery(theme.breakpoints.down("md"));
@@ -252,11 +246,11 @@ function TableView(props) {
                                         onClick={(event) =>
                                             handleClick(event, id, index)
                                         }
-                                        className={
+                                        sx={
                                             !isSelected &&
                                             analysis.status ===
                                                 analysisStatus.RUNNING
-                                                ? running.backdrop
+                                                ? running
                                                 : undefined
                                         }
                                         role="checkbox"

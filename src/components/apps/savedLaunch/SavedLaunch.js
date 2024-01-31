@@ -4,27 +4,21 @@
  *
  */
 import React from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import Chip from "@mui/material/Chip";
 import PublicIcon from "@mui/icons-material/Public";
 import LockIcon from "@mui/icons-material/Lock";
-const PREFIX = 'SavedLaunch';
+const PREFIX = "SavedLaunch";
 
 const classes = {
-    chip: `${PREFIX}-chip`
+    chip: `${PREFIX}-chip`,
 };
 
-const StyledChip
- = styled(Chip
-)((
-    {
-        theme
-    }
-) => ({
+const StyledChip = styled(Chip)(({ theme }) => ({
     [`& .${classes.chip}`]: {
         margin: theme.spacing(1),
-    }
+    },
 }));
 
 const SavedLaunch = React.forwardRef((props, ref) => {
@@ -41,7 +35,7 @@ const SavedLaunch = React.forwardRef((props, ref) => {
     const color = isDefault || isPublic ? "primary" : "default";
     const icon = isPublic ? <PublicIcon /> : <LockIcon />;
     return (
-        <Chip
+        <StyledChip
             key={id}
             id={id}
             icon={icon}
@@ -72,4 +66,4 @@ SavedLaunch.propTypes = {
     classes: PropTypes.object,
 };
 
-export default (SavedLaunch);
+export default SavedLaunch;

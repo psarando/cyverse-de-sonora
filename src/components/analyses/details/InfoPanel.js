@@ -6,7 +6,7 @@
  *
  */
 import React, { useState } from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "i18n";
 
 import ids from "../ids";
@@ -30,46 +30,20 @@ import {
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 
-const PREFIX = 'InfoPanel';
+const PREFIX = "InfoPanel";
 
 const classes = {
     heading: `${PREFIX}-heading`,
     accordionDetails: `${PREFIX}-accordionDetails`,
-    root: `${PREFIX}-root`
+    root: `${PREFIX}-root`,
 };
-
-const StyledStep
- = styled(Step
-)((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.heading}`]: {
-        color: theme.palette.info,
-        [theme.breakpoints.down("md")]: {
-            maxWidth: 150,
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-        },
-    },
-
-    [`& .${classes.accordionDetails}`]: {
-        display: "block",
-    },
-
-    [`& .${classes.root}`]: {
-        width: "100%",
-    }
-}));
 
 function Updates(props) {
     const { updates, baseId } = props;
 
     const sortedUpdates = [...updates].reverse();
     return (
-        <List className={classes.root} id={baseId}>
+        <List id={baseId}>
             {sortedUpdates.map((update, updateIndex) => {
                 const status = update.status;
                 const timestamp = update.timestamp;
@@ -113,6 +87,22 @@ function Step(props) {
     );
 }
 
+const StyledStep = styled(Step)(({ theme }) => ({
+    [`& .${classes.heading}`]: {
+        color: theme.palette.info,
+        [theme.breakpoints.down("md")]: {
+            maxWidth: 150,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+        },
+    },
+
+    [`& .${classes.accordionDetails}`]: {
+        display: "block",
+    },
+}));
+
 function InfoPanel(props) {
     const { info, isInfoFetching, infoFetchError, baseId } = props;
     const { t } = useTranslation("analyses");
@@ -150,7 +140,7 @@ function InfoPanel(props) {
 
     return info.steps?.map((s, index) => {
         return (
-            <Step
+            <StyledStep
                 key={index}
                 step={s}
                 baseId={buildID(debugId, ids.INFO.STEP, index)}

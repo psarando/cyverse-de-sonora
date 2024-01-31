@@ -5,7 +5,7 @@
  */
 
 import React, { Fragment, useState } from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "i18n";
 import CustomizeColumns from "./CustomizeColumns";
 import dataFields from "../dataFields";
@@ -42,34 +42,13 @@ import {
 
 import RowDotMenu from "./RowDotMenu";
 
-const PREFIX = 'TableView';
+const PREFIX = "TableView";
 
 const classes = {
     root: `${PREFIX}-root`,
     selected: `${PREFIX}-selected`,
-    hover: `${PREFIX}-hover`
+    hover: `${PREFIX}-hover`,
 };
-
-const StyledTableContainer = styled(TableContainer)((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.root}`]: {
-        "&$selected, &$selected:hover": {
-            backgroundColor: alpha(
-                theme.palette.error.main,
-                theme.palette.action.selectedOpacity
-            ),
-        },
-    },
-
-    /* Pseudo-class applied to the root element if `selected={true}`. */
-    [`& .${classes.selected}`]: {},
-
-    /* Pseudo-class applied to the root element if `hover={true}`. */
-    [`& .${classes.hover}`]: {}
-}));
 
 function SizeCell({ resource }) {
     return <TableCell>{formatFileSize(resource.fileSize)}</TableCell>;
@@ -115,11 +94,7 @@ function getColumnCell(key, resource, dataRecordFields) {
 }
 
 // Copied from MUI's TableRow code, changed the selected color to error intention
-const invalidRowStyles = makeStyles((
-    {
-        theme
-    }
-) => ({
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     [`& .${classes.root}`]: {
         "&$selected, &$selected:hover": {
             backgroundColor: alpha(
@@ -133,7 +108,7 @@ const invalidRowStyles = makeStyles((
     [`& .${classes.selected}`]: {},
 
     /* Pseudo-class applied to the root element if `hover={true}`. */
-    [`& .${classes.hover}`]: {}
+    [`& .${classes.hover}`]: {},
 }));
 
 function getDefaultCols(rowDotMenuVisibility, dataRecordFields) {
@@ -190,7 +165,6 @@ function TableView(props) {
         computeLimitExceeded,
     } = props;
 
-    const invalidRowClass = invalidRowStyles();
     const { t } = useTranslation("data");
     const dataRecordFields = dataFields(t);
     const tableId = buildID(baseId, ids.LISTING_TABLE);
@@ -355,9 +329,7 @@ function TableView(props) {
                                 );
                                 return (
                                     <DERow
-                                        classes={
-                                            isInvalid ? invalidRowClass : null
-                                        }
+                                        classes={isInvalid ? classes : null}
                                         title={
                                             isInvalid
                                                 ? t("invalidSelectionRowTitle")

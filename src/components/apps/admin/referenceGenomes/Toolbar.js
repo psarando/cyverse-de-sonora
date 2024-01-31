@@ -6,7 +6,7 @@
  */
 
 import React from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "i18n";
 
 import ids from "./ids";
@@ -18,18 +18,14 @@ import Toolbar from "@mui/material/Toolbar";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-const PREFIX = 'TableToolbar';
+const PREFIX = "TableToolbar";
 
 const classes = {
     root: `${PREFIX}-root`,
-    toolbarItems: `${PREFIX}-toolbarItems`
+    toolbarItems: `${PREFIX}-toolbarItems`,
 };
 
-const StyledToolbar = styled(Toolbar)((
-    {
-        theme
-    }
-) => ({
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     [`&.${classes.root}`]: {
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(1),
@@ -42,33 +38,12 @@ const StyledToolbar = styled(Toolbar)((
         [theme.breakpoints.up("sm")]: {
             margin: theme.spacing(1),
         },
-    }
-}));
-
-const useToolbarStyles = makeStyles((
-    {
-        theme
-    }
-) => ({
-    [`&.${classes.root}`]: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
     },
-
-    [`& .${classes.toolbarItems}`]: {
-        [theme.breakpoints.down("sm")]: {
-            margin: theme.spacing(0.5),
-        },
-        [theme.breakpoints.up("sm")]: {
-            margin: theme.spacing(1),
-        },
-    }
 }));
 
 const TableToolbar = (props) => {
     const { baseId } = props;
     const { t } = useTranslation("referenceGenomes");
-    const classes = useToolbarStyles();
     const {
         preGlobalFilteredRows,
         setGlobalFilter,

@@ -5,31 +5,13 @@
  */
 import React from "react";
 
-import { styled } from '@mui/material/styles';
-
 import buildID from "components/utils/DebugIDUtil";
 import { Delete } from "@mui/icons-material";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, useTheme } from "@mui/material";
 import PropTypes from "prop-types";
 
 import ids from "./ids";
 import { useTranslation } from "../../i18n";
-
-const PREFIX = 'DeleteButton';
-
-const classes = {
-    deleteBtn: `${PREFIX}-deleteBtn`
-};
-
-const StyledComponent = styled(Component)((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.deleteBtn}`]: {
-        color: theme.palette.error.main,
-    }
-}));
 
 function DeleteButton(props) {
     const {
@@ -40,8 +22,7 @@ function DeleteButton(props) {
         ...rest
     } = props;
     const { t } = useTranslation("common");
-
-
+    const theme = useTheme();
 
     const isButton = component === "Button";
     const Component = isButton ? Button : IconButton;
@@ -49,17 +30,18 @@ function DeleteButton(props) {
     const showChildIcon = !isButton || !showStartIcon;
 
     return (
-        <StyledComponent
+        <Component
             id={buildID(baseId, ids.BUTTONS.DELETE)}
             aria-label={ariaLabel || t("delete")}
-            className={isButton ? classes.deleteBtn : null}
-            classes={!isButton ? { root: classes.deleteBtn } : null}
+            sx={{
+                color: theme.palette.error.main,
+            }}
             {...(showStartIcon && { startIcon: <Delete /> })}
             {...rest}
         >
             {showChildIcon && <Delete />}
             {children}
-        </StyledComponent>
+        </Component>
     );
 }
 
