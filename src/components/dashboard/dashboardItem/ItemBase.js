@@ -27,8 +27,6 @@ import * as constants from "../constants";
 import * as fns from "../functions";
 import useStyles from "./styles";
 
-import { useConfig } from "contexts/config";
-
 import { getUserName } from "../../utils/getUserName";
 
 const useRunningAnalysesStyles = makeStyles()(styles);
@@ -264,10 +262,10 @@ class ItemBase {
         content,
         height,
         width,
+        config,
         actions = [],
         menuActions = [],
     }) {
-        const [config] = useConfig();
         this.kind = kind;
         this.section = section;
         this.content = content;
