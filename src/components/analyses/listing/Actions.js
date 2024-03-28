@@ -36,7 +36,7 @@ import {
     Notes as LogsIcon,
 } from "@mui/icons-material";
 
-const RelaunchButton = React.forwardRef((props, ref) => {
+const RelaunchButton = React.forwardRef(function RelaunchButton(props, ref) {
     const { baseId, className, onClick, href } = props;
     const { t } = useTranslation("analyses");
     return (
@@ -55,7 +55,10 @@ const RelaunchButton = React.forwardRef((props, ref) => {
     );
 });
 
-const GotoOutputFolderButton = React.forwardRef((props, ref) => {
+const GotoOutputFolderButton = React.forwardRef(function GotoOutputFolderButton(
+    props,
+    ref
+) {
     const {
         baseId,
         className,
