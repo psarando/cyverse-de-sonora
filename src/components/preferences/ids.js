@@ -1,4 +1,4 @@
-export default {
+const ids = {
     ANALYSES_EMAIL_NOTIFICATION_SWITCH: "analysesEmailNotificationSwitch",
     ANALYSES_KB_SHORTCUT_TEXT: "analysesKbShortcutText",
     APPS_KB_SHORTCUT_TEXT: "appKbShortcutText",
@@ -27,3 +27,5 @@ export default {
     WEBHOOK_TEST_BTN: "webhookTestBtn",
     WEBHOOK_TOPIC_SWITCH: "webhookTopicSwitch",
 };
+
+export default ids;

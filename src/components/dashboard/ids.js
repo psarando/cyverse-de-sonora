@@ -1,4 +1,4 @@
-export default {
+const ids = {
     BASE: "dashboard",
     ITEM: "item",
     ROOT: "root",
@@ -17,3 +17,5 @@ export default {
     SECTION_INSTANT_LAUNCHES: "section.instant-launches",
     LEGACY_CARD: "legacyCard",
 };
+
+export default ids;
