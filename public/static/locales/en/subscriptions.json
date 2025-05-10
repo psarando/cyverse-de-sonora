@@ -52,6 +52,7 @@
     "save": "Save",
     "searchUsers": "Search Users",
     "selectedUser": "Selected User",
+    "sharingNotAvailable": "Sharing feature is not available for Basic subscriptions. Please upgrade your subscription tier. <subscriptionLink>More details on our subscription page</subscriptionLink>.",
     "startDate": "Start Date",
     "subAddonsUpdated": "Add-ons successfully updated.",
     "submit": "Submit",
