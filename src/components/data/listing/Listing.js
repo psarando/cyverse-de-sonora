@@ -80,14 +80,7 @@ import { createDOIRequest } from "serviceFacades/doi";
 import MoveDialog from "../MoveDialog";
 import SearchForm from "components/search/form";
 
-import { useConfig } from "contexts/config";
-import { useUserProfile } from "contexts/userProfile";
-
-import {
-    getResourceUsageSummary,
-    RESOURCE_USAGE_QUERY_KEY,
-} from "serviceFacades/dashboard";
-import { getUserQuota } from "common/resourceUsage";
+import useResourceUsageSummary from "common/useResourceUsageSummary";
 
 import LocalContextsLabelDisplay from "components/metadata/LocalContextsLabelDisplay";
 import {
@@ -113,11 +106,8 @@ function Listing(props) {
         toolbarVisibility = true,
         rowDotMenuVisibility = true,
     } = props;
-    const [config] = useConfig();
-
     const { t } = useTranslation(["data", "common", "localcontexts"]);
 
-    const [userProfile] = useUserProfile();
     const uploadTracker = useUploadTrackingState();
     const theme = useTheme();
     const [isGridView, setGridView] = useState(false);
@@ -159,12 +149,12 @@ function Listing(props) {
     const [moveDlgOpen, setMoveDlgOpen] = useState(false);
     const [erroredUploadCount, setErroredUploadCount] = useState(0);
 
-    const enforceSubscriptions = config?.subscriptions?.enforce;
-
-    const [planCanShare, setPlanCanShare] = useState(!enforceSubscriptions);
-    const [uploadsEnabled, setUploadsEnabled] = useState(!enforceSubscriptions);
-    const [computeLimitExceeded, setComputeLimitExceeded] =
-        useState(enforceSubscriptions);
+    const {
+        isFetchingUsageSummary,
+        computeLimitExceeded,
+        dataLimitExceeded,
+        planCanShare,
+    } = useResourceUsageSummary(showErrorAnnouncer);
 
     const onRenameClicked = () => setRenameDlgOpen(true);
     const onRenameDlgClose = () => setRenameDlgOpen(false);
@@ -308,41 +298,6 @@ function Listing(props) {
         },
         onError: (e) => {
             showErrorAnnouncer(t("defaultMappingError"), e);
-        },
-    });
-
-    const { isFetching: isFetchingUsageSummary } = useQuery({
-        queryKey: [RESOURCE_USAGE_QUERY_KEY],
-        queryFn: getResourceUsageSummary,
-        enabled: enforceSubscriptions && !!userProfile?.id,
-        onSuccess: (respData) => {
-            const dataUsage = respData?.data_usage?.total || 0;
-            const computeUsage = respData?.cpu_usage?.total || 0;
-            const subscription = respData?.subscription;
-            const storageQuota = getUserQuota(
-                globalConstants.DATA_STORAGE_RESOURCE_NAME,
-                subscription
-            );
-            const computeQuota = getUserQuota(
-                globalConstants.CPU_HOURS_RESOURCE_NAME,
-                subscription
-            );
-
-            const planName = subscription?.plan?.name;
-            const hasDataAddon = subscription?.addons?.find(
-                ({ addon }) =>
-                    addon.resource_type.name ===
-                    constants.DATA_STORAGE_RESOURCE_NAME
-            );
-
-            setPlanCanShare(
-                planName !== constants.PLAN_NAME_BASIC || hasDataAddon
-            );
-            setUploadsEnabled(dataUsage < storageQuota);
-            setComputeLimitExceeded(computeUsage >= computeQuota);
-        },
-        onError: (e) => {
-            showErrorAnnouncer(t("common:usageSummaryError"), e);
         },
     });
 
@@ -715,7 +670,7 @@ function Listing(props) {
     return (
         <>
             {render && render(selected.length, getSelectedResources)}
-            <UploadDropTarget path={path} uploadsEnabled={uploadsEnabled}>
+            <UploadDropTarget path={path} uploadsEnabled={!dataLimitExceeded}>
                 <DataToolbar
                     path={path}
                     selected={selected}
@@ -752,7 +707,7 @@ function Listing(props) {
                     onRefreshSelected={refreshListing}
                     onRenameSelected={onRenameClicked}
                     onMoveSelected={onMoveSelected}
-                    uploadsEnabled={uploadsEnabled}
+                    uploadsEnabled={!dataLimitExceeded}
                     planCanShare={planCanShare}
                 />
                 {localContextsProjectURI && localContextsProject && (

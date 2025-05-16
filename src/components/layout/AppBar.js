@@ -68,11 +68,9 @@ import UserPortalUpdatePrompts from "./UserPortalUpdatePrompts";
 import useFirstClassInstantLaunch from "../instantlaunches/useFirstClassInstantLaunch";
 import {
     ANALYSES_STATS_QUERY_KEY,
-    RESOURCE_USAGE_QUERY_KEY,
     getAnalysesStats,
-    getResourceUsageSummary,
 } from "serviceFacades/dashboard";
-import { getUserQuota } from "common/resourceUsage";
+import useResourceUsageSummary from "common/useResourceUsageSummary";
 
 import useBreakpoints from "./useBreakpoints";
 
@@ -112,7 +110,6 @@ function DEAppBar(props) {
         showErrorAnnouncer,
     } = props;
     const [userProfile, setUserProfile] = useUserProfile();
-    const [userSubscription, setUserSubscription] = useState(null);
     const { currentNotification } = useNotifications();
     const [avatarLetter, setAvatarLetter] = useState("");
     const [open, setOpen] = useState(false);
@@ -123,11 +120,16 @@ function DEAppBar(props) {
     const [profileRefetchInterval, setProfileRefetchInterval] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [runningViceJobs, setRunningViceJobs] = useState([]);
-    const [computeLimitExceeded, setComputeLimitExceeded] = useState(
-        !!config?.subscriptions?.enforce
-    );
-    const [dataUsagePercentage, setDataUsagePercentage] = useState(0);
     const { isSmUp, isSmDown } = useBreakpoints();
+
+    const {
+        resourceUsageSummary,
+        dataUsage,
+        storageQuota,
+        computeLimitExceeded,
+    } = useResourceUsageSummary(showErrorAnnouncer);
+    const userSubscription = resourceUsageSummary?.subscription;
+    const dataUsagePercentage = formatUsagePercentage(dataUsage, storageQuota);
 
     if (activeView === NavigationConstants.APPS) {
         filter = searchConstants.APPS;
@@ -182,35 +184,6 @@ function DEAppBar(props) {
             setProfileRefetchInterval(clientConfig.sessions.poll_interval_ms);
         }
     }, [clientConfig, setConfig, userSubscription]);
-
-    useQuery({
-        queryKey: [RESOURCE_USAGE_QUERY_KEY],
-        queryFn: getResourceUsageSummary,
-        enabled: !!config?.subscriptions?.enforce && !!userProfile?.id,
-        onSuccess: (respData) => {
-            const computeUsage = respData?.cpu_usage?.total || 0;
-            const dataUsage = respData?.data_usage?.total || 0;
-            const subscription = respData?.subscription;
-
-            const computeQuota = getUserQuota(
-                constants.CPU_HOURS_RESOURCE_NAME,
-                subscription
-            );
-            const storageQuota = getUserQuota(
-                constants.DATA_STORAGE_RESOURCE_NAME,
-                subscription
-            );
-
-            setUserSubscription(subscription);
-            setComputeLimitExceeded(computeUsage >= computeQuota);
-            setDataUsagePercentage(
-                formatUsagePercentage(dataUsage, storageQuota)
-            );
-        },
-        onError: (e) => {
-            showErrorAnnouncer(t("usageSummaryError"), e);
-        },
-    });
 
     const { data: analysesStats } = useQuery(
         [ANALYSES_STATS_QUERY_KEY],
