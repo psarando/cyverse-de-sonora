@@ -129,7 +129,6 @@
         "react-dom": "^18.3.1",
         "react-highlighter-ts": "^2.2.0",
         "react-i18next": "^13.5.0",
-        "react-is": "^18.3.1",
         "react-joyride": "^3.0.0",
         "react-player": "^2.6.2",
         "sanitize-html": "^2.3.2",
@@ -138,9 +137,6 @@
         "tss-react": "^4.9.4",
         "winston": "^3.2.1",
         "ws": "^8.21.0"
-    },
-    "overrides": {
-        "react-is": "^18.3.1"
     },
     "optionalDependencies": {
         "fsevents": "^1.2.11"
