@@ -147,7 +147,7 @@
         "@storybook/nextjs": "^8.6.17",
         "axios-mock-adapter": "^1.18.1",
         "cross-env": "^6.0.3",
-        "eslint": "^8.56.0",
+        "eslint": "^9.39.4",
         "eslint-config-next": "^14.2.35",
         "husky": "^4.0.10",
         "i18next-http-backend": "^3.0.5",
