@@ -181,7 +181,15 @@
         ],
         "transformIgnorePatterns": [
             "/node_modules/(?!(@codemirror/legacy-modes)/)"
-        ]
+        ],
+        "setupFilesAfterEnv": [
+            "<rootDir>/src/__tests__/setup.js"
+        ],
+        "testPathIgnorePatterns": [
+            "/node_modules/",
+            "<rootDir>/src/__tests__/setup.js"
+        ],
+        "testEnvironment": "jsdom"
     },
     "lint-staged": {
         "*.js": [
