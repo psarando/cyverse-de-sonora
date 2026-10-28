@@ -74,6 +74,7 @@ const queryClient = new QueryClient({
 });
 
 export default definePreview({
+    // Log console output to the Actions panel (replaces @storybook/addon-console).
     async beforeEach() {
         spyOn(console, "log").mockName("console.log");
         spyOn(console, "warn").mockName("console.warn");

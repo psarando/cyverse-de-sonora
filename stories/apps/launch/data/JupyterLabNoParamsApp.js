@@ -12,6 +12,7 @@ const JupyterLabNoParamsApp = {
             default_cpu_cores: 8,
             default_memory: 32 * constants.ONE_GiB,
             default_disk_space: 128 * constants.ONE_GiB,
+            max_gpus: 2,
         },
     ],
 
@@ -22,6 +23,8 @@ const JupyterLabNoParamsApp = {
     label: "Jupyter Lab no params",
     id: "4dcda8a6-5761-11ea-bd06-008cfa5ae621",
     app_type: "DE",
+    overall_job_type: "interactive",
+    max_time_limit_seconds: 2592000,
     groups: [],
 };
 

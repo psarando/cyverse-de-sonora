@@ -9,7 +9,7 @@ import dashboardRouter from "./api/dashboard";
 import dataRouter from "./api/data";
 import debugRouter from "./api/debug";
 import doiRouter from "./api/doi";
-import fileIORouter from "./api/fileio";
+import fileIORouter, { bodyTimeout, fileUploadRouter } from "./api/fileio";
 import groupsRouter from "./api/groups";
 import instantlaunchRouter from "./api/instantlaunches";
 import metadataRouter from "./api/metadata";
@@ -18,6 +18,7 @@ import oauthRouter from "./api/oauth";
 import pipelinesRouter from "./api/pipelines";
 import quickLaunchRouter from "./api/quickLaunch";
 import refGenomeRouter from "./api/referenceGenomes";
+import resourcePresetsRouter from "./api/resourcePresets";
 import sharingRouter from "./api/sharing";
 import subscriptionsRouter from "./api/subscriptions";
 import supportRouter from "./api/support";
@@ -124,6 +125,14 @@ app.prepare()
             "$$$$$$$$ adding the api router to the express server $$$$$$$$$"
         );
         server.use("/api", compression());
+
+        // The /upload endpoint requires a longer timeout,
+        // so mount it before the default timeout for all other routes, below.
+        server.use("/api", fileUploadRouter());
+
+        // Mount a custom body request timeout handler for all routes.
+        server.use(bodyTimeout(config.requestTimeoutDefault));
+
         server.use("/api", clientConfigRouter);
         server.use("/api", appsRouter());
         server.use("/api", analysesRouter());
@@ -143,6 +152,7 @@ app.prepare()
         server.use("/api", subscriptionsRouter());
         server.use("/api", supportRouter());
         server.use("/api", refGenomeRouter());
+        server.use("/api", resourcePresetsRouter());
         server.use("/api", tagsRouter());
         server.use("/api", toolsRouter());
         server.use("/api", userRouter());
@@ -189,6 +199,13 @@ app.prepare()
             if (err) throw err;
             console.log(`> Ready on http://localhost:${config.listenPort}`);
         });
+
+        // Disable the global timeout for all requests.
+        httpServer.requestTimeout = 0;
+
+        // Ensure headers still set a timeout:
+        // the node http server default of 60 seconds.
+        httpServer.headersTimeout = 60 * 1000;
 
         httpServer.on("upgrade", upgradeListener(server));
     })
