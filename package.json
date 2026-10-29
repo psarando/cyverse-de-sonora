@@ -162,7 +162,7 @@
         "prettier": "3.8.1",
         "rimraf": "^3.0.0",
         "storybook": "^10.6.2",
-        "webpack": "5.101.2"
+        "webpack": "^5.112.0"
     },
     "prettier": {
         "trailingComma": "es5",
